@@ -46,7 +46,7 @@ contract UniFaucet is IUniFaucet {
     function drip(address token, address to) public returns (amount) {
         address stake = IRainbowFactory(factory).getStake(token);
         uint balance = IERC20(token).balanceOf(stake); // Should be more than staked amount
-        reflection = balance.sub(IRainbowStake(stake).getReserves());
+        reflection = balance.sub(IRainbowStake(stake).getReserve());
         require(reflect > 0, "UniFaucet: NO REFLECTION AVAILABLE");
         // Require fee on use
 

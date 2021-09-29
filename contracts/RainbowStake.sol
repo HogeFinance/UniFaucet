@@ -39,6 +39,11 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         token0 = _token0;
     }
 
+    function getReserves() public view returns (uint112 _reserve0, uint32 _blockTimestampLast) {
+        _reserve0 = reserve0;
+        _blockTimestampLast = blockTimestampLast;
+    }
+
     function _safeTransfer(address token, address to, uint value) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'RainbowFaucet: TRANSFER_FAILED');
@@ -87,7 +92,7 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
 
         require(liquidity > 0, 'RainbowStake: INSUFFICIENT_LIQUIDITY_MINTED');
         _mint(to, liquidity);
-        _update(balance0, reserve0);
+        _update(liquidity, reserve0); // Update reserve only by minted amount
         emit Mint(msg.sender, balance0);
     }
 
