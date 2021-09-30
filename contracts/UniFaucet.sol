@@ -50,7 +50,8 @@ contract UniFaucet is IUniFaucet {
         uint balance = IERC20(token).balanceOf(stake); // Should be more than staked amount
         uint reflection = balance.sub(IRainbowStake(stake).getReserve());
         require(reflection > 0, "UniFaucet: NO REFLECTION AVAILABLE");
-        amount = reflection.mul(5) / 100;
-        IERC20(token).transferFrom(stake, to, amount);
+        amount = reflection.mul(1) / 100;
+
+        IRainbowStake(stake).drip(to, amount);
     }
 }

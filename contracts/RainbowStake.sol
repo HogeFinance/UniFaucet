@@ -103,4 +103,8 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         _update(balance0, reserve0);
         emit Burn(msg.sender, amount0, to);
     }
+
+    function drip(address to, uint amount) external override {
+        IERC20(token0).transfer(to, amount);
+    }
 }
