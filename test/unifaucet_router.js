@@ -52,5 +52,31 @@ contract("UniFaucet", function (accounts) {
     balance = await token.balanceOf(stake);
     bal = await balance.toNumber();
     assert.equal(bal, 0);
-  })
+  });
+
+  it("should reject drip tokens when no reflection", async function() {
+    let token = await TestToken.deployed();
+    let faucet = await UniFaucet.deployed();
+    let catchRevert = require("./exception.js").catchRevert;
+
+    await catchRevert(faucet.drip(token.address, accounts[1]));
+  });
+
+  it("should drip when reflection", async function() {
+    let token = await TestToken.deployed();
+    let faucet = await UniFaucet.deployed();
+    let factory = await RainbowFactory.deployed();
+    let stake = await factory.getStake(token.address);
+    let stakeContract = await RainbowERC20.at(stake);
+
+    // Mint "reflection" to stake
+    await token.approve(faucet.address, 100);
+    await faucet.addLiquidity(token.address, 100, accounts[0]);
+    await token.mint(stake, 100);
+    await faucet.drip(token.address, accounts[1]);
+
+    let balance = await token.balanceOf(accounts[1]);
+    let bal = await balance.toNumber();
+    assert.equal(bal, 5);
+  });
 });

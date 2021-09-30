@@ -40,6 +40,7 @@ interface IRainbowStake {
 
     function mint(address to) external returns (uint liquidity);
     function burn(address to) external returns (uint amount0);
+    function drip(address to, uint amount) external;
 //    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;
 //    function skim(address to) external;
 //    function sync() external;
