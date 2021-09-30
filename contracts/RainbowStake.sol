@@ -3,14 +3,12 @@ pragma solidity >=0.6.0 <0.9.0;
 import './interfaces/IRainbowStake.sol';
 import './RainbowERC20.sol';
 import './libraries/Math.sol';
-//import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IRainbowFactory.sol';
 import './interfaces/IRainbowCallee.sol';
 
 contract RainbowStake is IRainbowStake, RainbowERC20 {
     using SafeMath for uint;
-//    using UQ112x112 for uint224;
 
     uint public constant MINIMUM_LIQUIDITY = 10**3;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
@@ -18,7 +16,7 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
     address public override factory;
     address public override token0;
 
-    uint112 private reserve0;           // uses single storage slot, accessible via getReserves
+    uint    private reserve0;           // uses single storage slot, accessible via getReserves
     uint32  private blockTimestampLast; // uses single storage slot, accessible via getReserves
 
     uint private unlocked = 1;
@@ -39,9 +37,8 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         token0 = _token0;
     }
 
-    function getReserves() public view returns (uint112 _reserve0, uint32 _blockTimestampLast) {
+    function getReserve() public view override returns (uint _reserve0) {
         _reserve0 = reserve0;
-        _blockTimestampLast = blockTimestampLast;
     }
 
     function _safeTransfer(address token, address to, uint value) private {
@@ -49,16 +46,12 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'RainbowFaucet: TRANSFER_FAILED');
     }
 
-    function transferLiquidity(address from, address to, uint value) external override returns (bool) {
-        return RainbowERC20(this).transferFrom(from, to, value);
-    }
-
     // update reserves and, on the first call per block, price accumulators
-    function _update(uint balance0, uint112 _reserve0) private {
+    function _update(uint balance0, uint _reserve0) private {
         require(balance0 <= 2**256 - 1, "RainbowStake: OVERFLOW");
         uint32 blockTimestamp = uint32(block.timestamp % 2**32);
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
-        reserve0 = uint112(balance0);
+        reserve0 = uint(balance0);
         blockTimestampLast = blockTimestamp;
         emit Sync(reserve0);
     }

@@ -14,7 +14,6 @@ interface IRainbowStake {
 //    function approve(address spender, uint value) external returns (bool);
 //    function transfer(address to, uint value) external returns (bool);
 //    function transferFrom(address from, address to, uint value) external returns (bool);
-      function transferLiquidity(address from, address to, uint value) external returns (bool);
 //
 //    function DOMAIN_SEPARATOR() external view returns (bytes32);
 //    function PERMIT_TYPEHASH() external pure returns (bytes32);
@@ -32,17 +31,13 @@ interface IRainbowStake {
 //        uint amount1Out,
 //        address indexed to
 //    );
-    event Sync(uint112 reserve0);
+    event Sync(uint reserve0);
 //
 //    function MINIMUM_LIQUIDITY() external pure returns (uint);
     function factory() external view returns (address);
     function token0() external view returns (address);
-//    function token1() external view returns (address);
-    function getReserve() external view returns (uint112 reserve0, uint32 blockTimestampLast);
-//    function price0CumulativeLast() external view returns (uint);
-//    function price1CumulativeLast() external view returns (uint);
-//    function kLast() external view returns (uint);
-//
+    function getReserve() external view returns (uint reserve0);
+
     function mint(address to) external returns (uint liquidity);
     function burn(address to) external returns (uint amount0);
 //    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;

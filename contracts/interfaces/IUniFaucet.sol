@@ -7,8 +7,7 @@ interface IUniFaucet {
     function addLiquidity(
         address tokenA,
         uint amountADesired,
-        address to,
-        uint deadline
+        address to
     ) external returns (uint liquidity);
 //    function addLiquidityETH(
 //        address token,
@@ -21,8 +20,7 @@ interface IUniFaucet {
     function removeLiquidity(
         address tokenA,
         uint liquidity,
-        address to,
-        uint deadline
+        address to
     ) external returns (uint amountA);
 //    function removeLiquidityETH(
 //        address token,
