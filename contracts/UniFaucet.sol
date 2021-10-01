@@ -40,6 +40,7 @@ contract UniFaucet is IUniFaucet {
     // **** REMOVE LIQUIDITY ****
     function removeLiquidity(address tokenA, uint liquidity, address to) public override returns (uint amountA) {
         address stake = IRainbowFactory(factory).getStake(tokenA);
+
         RainbowStake(stake).transferFrom(msg.sender, stake, liquidity); // send liquidity to pair
         amountA = RainbowStake(stake).burn(to);
     }
@@ -47,11 +48,6 @@ contract UniFaucet is IUniFaucet {
     // Require fee on use
     function drip(address token, address to) public returns (uint amount) {
         address stake = IRainbowFactory(factory).getStake(token);
-        uint balance = IERC20(token).balanceOf(stake); // Should be more than staked amount
-        uint reflection = balance.sub(IRainbowStake(stake).getReserve());
-        require(reflection > 0, "UniFaucet: NO REFLECTION AVAILABLE");
-        amount = reflection.mul(1) / 100;
-
         IRainbowStake(stake).drip(to, amount);
     }
 }
