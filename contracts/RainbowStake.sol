@@ -37,74 +37,61 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         token0 = _token0;
     }
 
-    function getReserve() public view override returns (uint _reserve0) {
-        _reserve0 = reserve0;
-    }
-
     function _safeTransfer(address token, address to, uint value) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'RainbowFaucet: TRANSFER_FAILED');
     }
 
+    function getReserve() public view override returns (uint _reserve0) {
+        _reserve0 = reserve0;
+    }
+
     // update reserves and, on the first call per block, price accumulators
-    function _update(uint balance0, uint _reserve0) private {
+    function _update(uint balance0) private {
         require(balance0 <= 2**256 - 1, "RainbowStake: OVERFLOW");
-        uint32 blockTimestamp = uint32(block.timestamp % 2**32);
-        uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
-        reserve0 = uint(balance0);
-        blockTimestampLast = blockTimestamp;
+        reserve0 = balance0;
         emit Sync(reserve0);
     }
 
-    // if fee is on, mint liquidity equivalent to 1/6th of the growth in sqrt(k)
-//    function _mintFee(uint112 _reserve0, uint112 _reserve1) private returns (bool feeOn) {
-//        address feeTo = IUniswapV2Factory(factory).feeTo();
-//        feeOn = feeTo != address(0);
-//        uint _kLast = kLast; // gas savings
-//        if (feeOn) {
-//            if (_kLast != 0) {
-//                uint rootK = Math.sqrt(uint(_reserve0).mul(_reserve1));
-//                uint rootKLast = Math.sqrt(_kLast);
-//                if (rootK > rootKLast) {
-//                    uint numerator = totalSupply.mul(rootK.sub(rootKLast));
-//                    uint denominator = rootK.mul(5).add(rootKLast);
-//                    uint liquidity = numerator / denominator;
-//                    if (liquidity > 0) _mint(feeTo, liquidity);
-//                }
-//            }
-//        } else if (_kLast != 0) {
-//            kLast = 0;
-//        }
-//    }
-
     // this low-level function should be called from a contract which performs important safety checks
-    function mint(address to) external lock override returns (uint liquidity) {
+    function mint(address to) external lock override returns (uint) {
         // Fetch amount actually received from Router transfer()
-        uint balance0 = IERC20(token0).balanceOf(address(this));
-        uint liquidity = balance0.sub(reserve0);
+        uint _balance0 = IERC20(token0).balanceOf(address(this));
+        uint _reserve = getReserve();
+        uint _liquidity = _balance0.sub(_reserve);
+        require(_liquidity > 0, 'RainbowStake: INSUFFICIENT_LIQUIDITY_MINTED');
 
-        require(liquidity > 0, 'RainbowStake: INSUFFICIENT_LIQUIDITY_MINTED');
-        _mint(to, liquidity);
-        _update(liquidity, reserve0); // Update reserve only by minted amount
-        emit Mint(msg.sender, balance0);
+        _mint(to, _liquidity);
+        _update(_reserve.add(_liquidity)); // Update reserve only by minted amount
+
+        emit Mint(msg.sender, _balance0);
+        return _liquidity;
     }
 
     // this low-level function should be called from a contract which performs important safety checks
     function burn(address to) external lock override returns (uint amount0) {
-        address _token0 = token0;                                // gas savings
-        uint balance0 = IERC20(_token0).balanceOf(address(this));
-        uint liquidity = balanceOf[address(this)];
+        require(getReserve() > 0, 'UniFaucet: CANNOT_BURN_NO_LIQUIDITY');
+        address _token0   = token0;
+        uint _balance0    = IERC20(_token0).balanceOf(address(this)); // Of Tokens
+        uint _totalSupply = getReserve();          // Of Liquidity
+        uint liquidity    = balanceOf[address(this)]; // Num LP Tokens
+        uint amount0      = liquidity.mul(_balance0) / _totalSupply; // Share of Tokens including reflection
+        require(_balance0 > 0, 'UniFaucet: INSUFFICIENT_LIQUIDITY_BURNED');
 
-        require(balance0 > 0, 'UniswapV2: INSUFFICIENT_LIQUIDITY_BURNED');
         _burn(address(this), liquidity);
-        _safeTransfer(_token0, to, balance0);
-        balance0 = IERC20(_token0).balanceOf(address(this));
+        _safeTransfer(_token0, to, amount0);
 
-        _update(balance0, reserve0);
+        uint _reserve = getReserve();
+        _update(_reserve.sub(liquidity));
         emit Burn(msg.sender, amount0, to);
     }
 
     function drip(address to, uint amount) external override {
+        uint _balance = IERC20(token0).balanceOf(address(this)); // Should be more than staked amount
+        uint reflection = _balance.sub(getReserve());
+        require(reflection > 0, "UniFaucet: NO REFLECTION AVAILABLE");
+        amount = reflection.mul(1) / 100;
+
         IERC20(token0).transfer(to, amount);
     }
 }
