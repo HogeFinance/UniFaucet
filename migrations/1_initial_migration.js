@@ -10,7 +10,7 @@ module.exports = function (deployer, network, accounts) {
   deployer.deploy(Token, "TestToken", "TT373");
   deployer.deploy(RainbowFactory, accounts[0]).then(() =>
       // Subtitute init code into RainbowLibrary for router
-      deployer.deploy(UniFaucet, RainbowFactory.address, accounts[1])
+      deployer.deploy(UniFaucet, RainbowFactory.address, accounts[1], "10000000000000000")
   );
   deployer.deploy(RainbowStake);
   deployer.deploy(RainbowERC20);
