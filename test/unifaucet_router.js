@@ -69,8 +69,6 @@ contract("UniFaucet", function (accounts) {
     assert.equal(bal, 200);
   });
 
-  // 200 tokens
-  // 200 LP
   it("should reject drip tokens when no reflection", async function() {
     let token = await TestToken.deployed();
     let faucet = await UniFaucet.deployed();

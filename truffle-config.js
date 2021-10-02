@@ -37,7 +37,7 @@ module.exports = {
     },
 
     mumbai: {
-      provider: () => new HDWalletProvider(mumbaiKey, `https://rpc-mumbai.matic.today`),
+      provider: () => new HDWalletProvider(mumbaiKey, `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_ID}`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
