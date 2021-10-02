@@ -1,5 +1,7 @@
 import faucetlogo from "./img/faucetpro.png";
 import "./App.css";
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 import {
   Form,
   Button,
@@ -10,6 +12,46 @@ import {
 } from "react-bootstrap";
 
 function App() {
+  const providerOptions = {
+    injected: {
+      display: {
+        logo: "data:image/gif;base64,INSERT_BASE64_STRING",
+        name: "Injected",
+        description: "Connect with the provider in your Browser"
+      },
+      package: null
+    }
+    // Example with WalletConnect provider
+    /*walletconnect: {
+      display: {
+        logo: "data:image/gif;base64,INSERT_BASE64_STRING",
+        name: "Mobile",
+        description: "Scan qrcode with your mobile wallet"
+      },
+      package: WalletConnectProvider,
+      options: {
+        infuraId: "INFURA_ID" // required
+      }
+    } */
+  };
+  
+  const web3Modal = new Web3Modal({
+    network: "mainnet", // optional
+    cacheProvider: true, // optional
+    providerOptions // required
+  });
+
+  let provider = null;
+  let web3 = null;
+
+  async function connectProvider() {
+      provider = await web3Modal.connect();
+      web3 = new Web3(provider);
+    }
+  
+  connectProvider();
+
+
   return (
     <div className="App">
       <header>
@@ -102,5 +144,7 @@ function App() {
     </div>
   );
 }
+
+
 
 export default App;
