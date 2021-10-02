@@ -8,7 +8,7 @@ https://github.com/HogeFinance/UniFaucet/issues
 ## Using the Faucet
 ### As a Liquidity Provider
 The faucet is designed to be funded through fee-on-transfer and similar reflect based ERC20 compatible tokens. Simply `STAKE >>` a token and as the address gains 
-redistributed tokens, they are made available through the `> COLLECT <` button. LP providers can unstake their tokens at any time, taking with them their portion of the current
+redistributed tokens, they are made available through the  `> COLLECT <` button. LP providers can unstake their tokens at any time, taking with them their portion of the current
 current liquidity pool.
 
 ### As a User
