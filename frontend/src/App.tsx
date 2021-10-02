@@ -51,6 +51,7 @@ function App() {
      
     }
   connectProvider();
+  
   web3 = new Web3(provider);
 
   let testFaucetAddr = "0x0";
@@ -78,7 +79,7 @@ async function addLiquidity(){
   await unifaucetInstance.methods.addLiquidity(testTokenAddr, standardTokenAmt, userAccount);
 
   //get stake amount to confirm with user
-  
+
 }
 //function removeLiquidity(address tokenA, uint liquidity, address to) external returns (uint amountA);
 async function removeLiquidity(){
