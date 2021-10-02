@@ -139,7 +139,7 @@ contract("UniFaucet", function (accounts) {
     await token.mint(stake, 100);
 
     // Pay out to another address
-    await faucet.drip(token.address, accounts[1]);
+    await faucet.drip(token.address, accounts[1], {value: 10000000000000000});
 
     let balance = await token.balanceOf(accounts[1]);
     let bal = await balance.toNumber();

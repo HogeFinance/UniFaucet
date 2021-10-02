@@ -13,9 +13,11 @@ contract UniFaucet is IUniFaucet {
     using SafeMath for uint;
 
     address public immutable override factory;
+    address public immutable feeTo; // Where to send the fees
 
-    constructor(address _factory) public {
+    constructor(address _factory, address _feeTo) public {
         factory = _factory;
+        feeTo   = _feeTo;
     }
 
     // **** ADD LIQUIDITY ****
@@ -46,8 +48,11 @@ contract UniFaucet is IUniFaucet {
     }
 
     // Require fee on use
-    function drip(address token, address to) public returns (uint amount) {
+    function drip(address token, address to) public payable returns (uint amount) {
+        require(msg.value >= 10000000000000000, "Must send Wei");
+
         address stake = IRainbowFactory(factory).getStake(token);
         IRainbowStake(stake).drip(to, amount);
+        feeTo.call{value: msg.value}(new bytes(0));
     }
 }
