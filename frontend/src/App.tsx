@@ -2,6 +2,8 @@ import faucetlogo from "./img/faucetpro.png";
 import "./App.css";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import {irainbowstake, standardtoken, iunifaucet} from "./contractabi";
+
 import {
   Form,
   Button,
@@ -42,14 +44,54 @@ function App() {
   });
 
   let provider = null;
-  let web3 = null;
+  let web3 : any = null;
 
   async function connectProvider() {
       provider = await web3Modal.connect();
-      web3 = new Web3(provider);
+     
     }
-  
   connectProvider();
+  web3 = new Web3(provider);
+
+  let testFaucetAddr = "0x0";
+  let unifaucetInstance = new web3.eth.Contract(iunifaucet, testFaucetAddr);
+  let standardTokenInstance = null;
+
+
+//TODO: IMPLEMENT Smart contract methods
+//
+//function addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
+async function addLiquidity(){
+  //get token var/addr from user input
+  let testTokenAddr = "0x0";
+  let standardTokenAmt = 0;
+  //get connect wallet account addr
+  let userAccount = "0x0"
+
+  standardTokenInstance = web3.eth.Contract(standardtoken, testTokenAddr);
+
+  //approve token for spending on the faucet add liq addr
+  await standardTokenInstance.methods.approve(testFaucetAddr, standardTokenAmt);
+
+
+  //add liquidity
+  await unifaucetInstance.methods.addLiquidity(testTokenAddr, standardTokenAmt, userAccount);
+
+  //get stake amount to confirm with user
+  
+}
+//function removeLiquidity(address tokenA, uint liquidity, address to) external returns (uint amountA);
+async function removeLiquidity(){
+  //get token var/addr from user input
+  
+  //approve token for spending on the faucet add liq addr
+
+  //remove liquidity
+}
+//
+//From RainbowStake
+//function getReserve() public view override returns (uint _reserve0);
+
 
 
   return (
