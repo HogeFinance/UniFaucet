@@ -5,7 +5,6 @@ import './RainbowERC20.sol';
 import './libraries/Math.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IRainbowFactory.sol';
-import './interfaces/IRainbowCallee.sol';
 
 contract RainbowStake is IRainbowStake, RainbowERC20 {
     using SafeMath for uint;
@@ -75,7 +74,7 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         uint _balance0    = IERC20(_token0).balanceOf(address(this)); // Of Tokens
         uint _totalSupply = getReserve();          // Of Liquidity
         uint liquidity    = balanceOf[address(this)]; // Num LP Tokens
-        uint amount0      = liquidity.mul(_balance0) / _totalSupply; // Share of Tokens including reflection
+        amount0           = liquidity.mul(_balance0) / _totalSupply; // Share of Tokens including reflection
         require(_balance0 > 0, 'UniFaucet: INSUFFICIENT_LIQUIDITY_BURNED');
 
         _burn(address(this), liquidity);
@@ -93,5 +92,6 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         amount = reflection.mul(1) / 100;
 
         IERC20(token0).transfer(to, amount);
+        emit Drip(to, amount);
     }
 }

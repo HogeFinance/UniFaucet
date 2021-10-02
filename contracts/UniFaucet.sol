@@ -50,11 +50,11 @@ contract UniFaucet is IUniFaucet {
     }
 
     // Require fee on use
-    function drip(address token, address to) public payable returns (uint amount) {
+    function drip(address token, address to) public payable override returns (uint amount) {
         require(msg.value >= feeAmount, "Must send Wei");
 
         address stake = IRainbowFactory(factory).getStake(token);
         IRainbowStake(stake).drip(to, amount);
-        feeTo.call{value: msg.value}(new bytes(0));
+        TransferHelper.safeTransferETH(feeTo, msg.value);
     }
 }
