@@ -26,32 +26,31 @@
   }
 }
 
-
 /* All non default css below this line*/
-body{
+body {
   background-color: black;
 }
 
-.form-select{
+.form-select {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
 }
 
-.collect-btn{
+.collect-btn {
   margin-left: 40%;
   color: white;
 }
 
-#tokenamount{
+#tokenamount {
   font-size: 2em;
   vertical-align: middle;
 }
 
 @font-face {
-  font-family: 'Pixeboy';
-  src: url('./fonts/Pixeboy.woff2') format('woff2'),
-      url('./fonts/Pixeboy.woff') format('woff');
+  font-family: "Pixeboy";
+  src: url("./fonts/Pixeboy.woff2") format("woff2"),
+    url("./fonts/Pixeboy.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
