@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
-const Header: React.FC<{}> = () => {
+
+
+
+const Header: React.FC<{ connectVariantColor: string, connectButtonText: string}> = ({connectVariantColor, connectButtonText}) => {
+
+
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg">
@@ -29,8 +34,8 @@ const Header: React.FC<{}> = () => {
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
-          <Button variant="secondary" className="pull-right, mx-2">
-            Connect Metamask
+          <Button variant={connectVariantColor} className="pull-right, mx-2">
+            {connectButtonText}
           </Button>
         </Container>
       </Navbar>
