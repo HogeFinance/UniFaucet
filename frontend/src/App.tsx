@@ -32,18 +32,18 @@ function App() {
     }
   };
   const web3Modal = new Web3Modal({
-    network: "mainnet", // optional
-    cacheProvider: false, // optional
+    cacheProvider: true, // optional
     providerOptions // required
   });
 
   let provider = null;
   let web3: any = null;
-  let account: any = null;
-  let network = null;
 
   const [connectVariantColor, setConnectVariantColor] = useState('danger');
   const [connectButtonText, setConnectButtonText] = useState('Not Connected');
+  const [network, setNetworkText] = useState("not connected");
+  const [account, setAccountText] = useState(null);
+  const [networkName, setNetworkNameText] = useState("");
 
 
 
@@ -51,6 +51,7 @@ function App() {
   let standardTokenInstance: any = null;
   let stakeContract: any = null;
   let testFaucetAddr: any = null;
+  let testTokenAddr: any = null;
 
   async function connectProvider() {
 
@@ -61,32 +62,38 @@ function App() {
 
   async function getAccountInfo() {
     if (web3.eth) {
-      account = await web3.eth.getAccounts();
-      account = account[0];
+      let accounts = await web3.eth.getAccounts();
+      setAccountText(accounts[0]);
     }
-    network = window.ethereum.chainId;
+    setNetworkText(window.ethereum.chainId);
     console.log("Account Connected: " + account);
     console.log("Network: " + window.ethereum.chainId);
 
     setConnectButtonText("Wallet Connected");
     setConnectVariantColor("success");
 
-    
-
-    console.log(connectButtonText);
-    console.log(connectVariantColor);
-
-
     //TODO: MULTICHAIN SUPPORT (chains that have verified faucets)
-    testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
-    unifaucetInstance = new web3.eth.Contract(iunifaucet, testFaucetAddr);
-    //TestToken deployed on Mumbai
-    // let standardTokenInstance = new web3.eth.Contract(standardtoken, "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102");
-    standardTokenInstance = null;
-    stakeContract = new web3.eth.Contract(irainbowstake, "0x4E22Bee97d8FcCb9C518060CdDADCEE31C384530");
+    if(window.ethereum.chainId = "0x13881"){
+      console.log("CONNECTED TO POLYGON TESTNET");
+      setNetworkNameText("Polygon Testnet");
+
+      testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
+      unifaucetInstance = await new web3.eth.Contract(iunifaucet, testFaucetAddr);
+      //TestToken deployed on Mumbai
+      // let standardTokenInstance = new web3.eth.Contract(standardtoken, "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102");
+      testTokenAddr = "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102";
+      
+      standardTokenInstance = await new web3.eth.Contract(standardtoken, "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102");
+      console.log(standardTokenInstance);
+      stakeContract = await new web3.eth.Contract(irainbowstake, "0x4E22Bee97d8FcCb9C518060CdDADCEE31C384530");
+
+      await addLiquidity();
+    }
+
   }
   connectProvider();
 
+  //addLiquidity();
 
 
 
@@ -101,13 +108,8 @@ function App() {
   //
   //function addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
   async function addLiquidity() {
-    //get token var/addr from user input
-    let testTokenAddr = "0x0";
-    let standardTokenAmt = 0;
+    let standardTokenAmt = 100;
     //get connect wallet account addr
-    let userAccount = "0x0";
-
-    standardTokenInstance = web3.eth.Contract(standardtoken, testTokenAddr);
 
     //approve token for spending on the faucet add liq addr
     await standardTokenInstance.methods.approve(
@@ -115,15 +117,19 @@ function App() {
       standardTokenAmt
     );
 
+    console.log("DONE");
+
     //add liquidity
-    await unifaucetInstance.methods.addLiquidity(
+    /*await unifaucetInstance.methods.addLiquidity(
       testTokenAddr,
       standardTokenAmt,
-      userAccount
-    );
+      account
+    ).call();
 
     //get stake amount to confirm with user
-    await stakeContract.methods.balanceOf(userAccount);
+    let amount = 0;
+   amount = await stakeContract.methods.balanceOf(account).call();
+   console.log("AMOUNT: " + amount); */
 
   }
   //function removeLiquidity(address tokenA, uint liquidity, address to) external returns (uint amountA);
@@ -138,7 +144,11 @@ function App() {
 
   return (
     <div className="App">
+     
       <Header connectVariantColor = {connectVariantColor} connectButtonText = {connectButtonText} />
+      <h3 style={{ color: "white" }}>Network: { network + "  " + networkName}</h3>
+      <h3 style={{ color: "white" }}>Account: { account }</h3>
+      <br></br>
       <Faucet />
     </div>
   );

@@ -1,7 +1,5 @@
 export const standardtokenabi = [
-    {
-        "contractName": "TestToken",
-        "abi": [
+    
           {
             "inputs": [
               {
@@ -312,6 +310,4 @@ export const standardtokenabi = [
             "stateMutability": "nonpayable",
             "type": "function"
           }
-        ]
-    }
 ];
