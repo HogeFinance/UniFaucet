@@ -27,8 +27,8 @@
 }
 
 /* All non default css below this line*/
-body {
-  background-color: black;
+.App {
+  background-color: #222628;
 }
 
 .form-select {
@@ -47,6 +47,10 @@ body {
   vertical-align: middle;
 }
 
+h2, h3 {
+  font-weight: bold;
+}
+
 @font-face {
   font-family: "Pixeboy";
   src: url("./fonts/Pixeboy.woff2") format("woff2"),
@@ -54,4 +58,71 @@ body {
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+.token-btn {
+  /* Input */
+
+  /* Auto Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 14px;
+
+  /* White */
+  background: #FFFFFF;
+  /* Gray/300 */
+  border: 1px solid #D0D5DD;
+  box-sizing: border-box;
+  /* Shadow/xs */
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+
+  /* Inside Auto Layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 6px 0px;
+
+  /* Content */
+
+  /* Auto Layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+
+  /* Inside Auto Layout */
+  flex: none;
+  order: 0;
+  flex-grow: 1;
+  margin: 0px 8px;
+
+
+  /* Text */
+
+  /* Text md/Normal */
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+  text-align: center;
+
+  /* Gray/500 */
+  color: #667085;
+
+
+  /* Inside Auto Layout */
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  margin: 0px 8px;
+
+  /* Gray/500 */
+  border: 1.66667px solid #667085;
 }

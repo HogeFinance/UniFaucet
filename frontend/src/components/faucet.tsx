@@ -1,54 +1,42 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-import faucetlogo from "../img/faucetpro.png";
+import faucetlogo from "../img/faucet.png";
 
 const Faucet: React.FC<{}> = () => {
-
-  
   return (
     <>
       <div>
-        <h2 style={{ color: "white" }}>UniFaucet</h2>
+        <h2 style={{ color: "white" }}><b>[UniFaucet]</b></h2>
         <br />
-        <h4 style={{ color: "white" }}>A faucet for reflect tokens</h4>
+        <h5 style={{ color: "#828282" }}>A faucet for reflect tokens</h5>
         <br></br>
         <br></br>
       </div>
-      <div>
+      <div className="row">
+        <div className="col-sm-4 offset-sm-4">
         <Form>
           <Form.Group className="mb-3" controlId="formSelect">
-            <Form.Label style={{ color: "white" }}>Select Network</Form.Label>
             <Form.Control
-              className="form-select"
+              className="form-select token-btn"
               as="select"
               aria-label="Default select example"
             >
-              <option>Open this select menu</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </Form.Control>
-            <Form.Label style={{ color: "white" }}>Select Token</Form.Label>
-            <Form.Control
-              className="form-select"
-              as="select"
-              aria-label="Default select example"
-            >
-              <option>Open this select menu</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+              <option>Token</option>
+              <option value="1">Hoge</option>
             </Form.Control>
           </Form.Group>
         </Form>
-        <br></br>
-        <br></br>
+        </div>
       </div>
-      <div>
-        <Button variant="primary" className="mx-2">
-          Stake &gt;&gt;
-        </Button>
-        <img src={faucetlogo} alt="Logo" />;
+      <div className="row">
+          <div className="col-sm-4">
+            <Button variant="primary" className="position-absolute top-50">
+                Stake &gt;&gt;
+            </Button>
+          </div>
+          <div className="col-sm-4">
+            <img src={faucetlogo} alt="Logo" />;
+          </div>
       </div>
       <div className="collect-btn">
         <span>
