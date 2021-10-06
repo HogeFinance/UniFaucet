@@ -1,14 +1,14 @@
 import React from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
-const Header: React.FC<{ connectVariantColor: string, connectButtonText: string}> = ({connectVariantColor, connectButtonText}) => {
+const Header: React.FC<{ connectVariantColor: string, connectButtonText: string }> = ({ connectVariantColor, connectButtonText }) => {
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
           <Navbar.Brand href="#home">UniFaucet</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
+          { /* <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="#home">Home</Nav.Link>
               <Nav.Link href="#link">Link</Nav.Link>
@@ -28,7 +28,7 @@ const Header: React.FC<{ connectVariantColor: string, connectButtonText: string}
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
-          </Navbar.Collapse>
+            </Navbar.Collapse> */ }
           <Button variant={connectVariantColor} className="pull-right, mx-2">
             {connectButtonText}
           </Button>
