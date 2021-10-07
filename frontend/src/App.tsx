@@ -4,16 +4,25 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { irainbowstake, irainbowerc20, standardtoken, iunifaucet } from "./contractabi";
-import { useState } from "react";
+import { useState, FocusEvent } from "react";
 
 import { Form, Modal, Button } from "react-bootstrap";
 import faucetlogo from "./img/faucet.png";
 
 function Faucet() {
   const [showModal, setShow] = useState(false);
+  const [liquidityAddAddr, setLiquidityAddAddr] = useState("");
+  const [liquidityAddAmt, setLiquidityAddAmt] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleLiquidityBlur = (e: FocusEvent<HTMLInputElement>) => setLiquidityAddAddr(e.target.value);
+  const handleLiquidityAmtBlur = (e: FocusEvent<HTMLInputElement>) => setLiquidityAddAmt(e.target.value);
+
+  var tokenlist = [
+      {id: 1, name: "TestToken", address: "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102"},
+      {id: 2, name: "Hoge", address: ""}
+    ];
 
   const providerOptions = {
     injected: {
@@ -83,29 +92,27 @@ function Faucet() {
   }
 
   // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
-  // faucetAddLiquidity = () => {
-  //   let testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
-  //   let unifaucetInstance = new this.props.web3.eth.Contract(iunifaucet, testFaucetAddr);
-  //   let testTokenAddr = "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102";
-  //   let standardTokenInstance = new this.props.web3.eth.Contract(standardtoken, testTokenAddr);
-  //
-  //   standardTokenInstance.methods.approve(testFaucetAddr, this.state.tokenAmount).send({from: this.props.account});
-  //   unifaucetInstance.methods.addLiquidity(testTokenAddr, this.state.tokenAmount, this.props.account).send({from: this.props.account});
-  //
-  //   //get stake amount to confirm with user
-  //   let amount = 0;
-  //   // amount = stakeContract.methods.balanceOf(this.props.account).call();
-  //   console.log("AMOUNT: " + amount);
-  // };
+  const faucetAddLiquidity = async (tokenAddr: string, tokenAmount: string) => {
+    let faucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
+    let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr);
+    let standardTokenInstance = new web3.eth.Contract(standardtoken, tokenAddr);
+
+    let response = await standardTokenInstance.methods.approve(faucetAddr, tokenAmount).send({from: account});
+    console.log("APPROVE RESPONSE: " + response);
+    response = await unifaucetInstance.methods.addLiquidity(testTokenAddr, tokenAmount, account).send({from: account});
+    console.log("LIQUIDITY RESPONSE: " + response);
+
+    // Confirm with user
+    let amount = 0;
+    amount = stakeContract.methods.balanceOf(account).call();
+  };
 
   // drip(address token, address to) public payable override returns (uint amount)
   const faucetDrip = async () => {
     let [web3, account] = await getAccountInfo();
     let testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
     let testTokenAddr = "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102";
-
     let unifaucetInstance = await new web3.eth.Contract(iunifaucet, testFaucetAddr);
-    let standardTokenInstance = await new web3.eth.Contract(standardtoken, testTokenAddr);
 
     if (account) {
       let response = await unifaucetInstance.methods.drip(testTokenAddr, account).send({from: account});
@@ -113,89 +120,85 @@ function Faucet() {
     }
   };
 
-    return (
-        <>
-          <div>
-            <h2 style={{color: "white"}}><b>[UniFaucet]</b></h2>
-            <br/>
-            <h5 style={{color: "#828282"}}>A faucet for reflect tokens</h5>
-            <br></br>
-            <br></br>
+  return (
+      <>
+        <div>
+          <h2 style={{color: "white"}}><b>[UniFaucet]</b></h2>
+          <br/>
+          <h5 style={{color: "#828282"}}>A faucet for reflect tokens</h5>
+          <br></br>
+          <br></br>
+        </div>
+        <div className="row">
+          <div className="col-sm-4 offset-sm-4">
+            <Form>
+              <Form.Group className="mb-3" controlId="formSelect">
+                <Form.Control
+                    className="form-select token-btn"
+                    as="select"
+                    aria-label="Default select example"
+                >
+                  <option>Token</option>
+                  <option value="1">Hoge</option>
+                </Form.Control>
+              </Form.Group>
+            </Form>
           </div>
-          <div className="row">
-            <div className="col-sm-4 offset-sm-4">
-              <Form>
-                <Form.Group className="mb-3" controlId="formSelect">
-                  <Form.Control
-                      className="form-select token-btn"
-                      as="select"
-                      aria-label="Default select example"
-                  >
-                    <option>Token</option>
-                    <option value="1">Hoge</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form>
-            </div>
+        </div>
+        <div className="row">
+          <div className="col-sm-4">
+            <Button variant="primary" onClick={handleShow} className="position-absolute top-50">
+              Stake &gt;&gt;
+            </Button>
           </div>
-          <div className="row">
-            <div className="col-sm-4">
-              <Button variant="primary" onClick={handleShow} className="position-absolute top-50">
-                Stake &gt;&gt;
-              </Button>
-            </div>
-            <div className="col-sm-4">
-              <img src={faucetlogo} alt="Logo"/>;
-            </div>
+          <div className="col-sm-4">
+            <img src={faucetlogo} alt="Logo"/>;
           </div>
-          <div className="collect-btn">
+        </div>
+        <div className="collect-btn">
           <span>
             <span id="tokenamount">6,000,000,000 HOGE</span>
             <Button variant="success" className="mx-2" onClick={faucetDrip}>
               &lt;&lt; Collect{" "}
             </Button>
           </span>
-          </div>
+        </div>
 
-          <Modal show={showModal} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Stake Tokens</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Stake Your Tokens in the Faucet
-              <label> Token Addr:
-                <input type="text" name="tokenAddrInput" id="tokenAddr" list="verifiedtokens"></input>
-              </label>
-              <datalist id="verifiedtokens">
-                <option value="0x0">HOGE</option>
-                <option value="0x0">Test Token</option>
-              </datalist>
-              <div style={{margin: "1em"}}>
-                <label> Amount:
-                  <input type="text" name="amountInput" id="amountAddr"></input>
-                </label>
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleClose}>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </>
-    );
+        <Modal show={showModal} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Stake Tokens</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Stake Your Tokens in the Faucet
+            <label>Token Addr:<input type="text" name="tokenAddrInput" id="tokenAddr" list="verifiedtokens" onBlur={handleLiquidityBlur}></input></label>
+            <datalist id="verifiedtokens">
+              <option value="0x0">HOGE</option>
+              <option value="0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102">Test Token</option>
+            </datalist>
+            <div style={{margin: "1em"}}>
+              <label>Amount:<input type="text" name="amountInput" id="amountAddr" onBlur={handleLiquidityAmtBlur}></input></label>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+  );
 }
 
 function App() {
   return (
-    <div className="App">
-      <div className="container">
-      {/*<Header connectVariantColor = {connectVariantColor} connectButtonText = {connectButtonText} />*/}
-      <Faucet />
+      <div className="App">
+        <div className="container">
+          {/*<Header connectVariantColor = {connectVariantColor} connectButtonText = {connectButtonText} />*/}
+          <Faucet />
+        </div>
       </div>
-    </div>
   );
 }
 
