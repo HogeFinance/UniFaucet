@@ -1,14 +1,20 @@
+import React from "react";
 import "./App.css";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { irainbowstake, irainbowerc20, standardtoken, iunifaucet } from "./contractabi";
-
-import Faucet from "./components/faucet";
-import Header from "./components/header";
 import { useState } from "react";
 
-function App() {
+import { Form, Modal, Button } from "react-bootstrap";
+import faucetlogo from "./img/faucet.png";
+
+function Faucet() {
+  const [showModal, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const providerOptions = {
     injected: {
       display: {
@@ -51,15 +57,9 @@ function App() {
   let testFaucetAddr: any = null;
   let testTokenAddr: any = null;
 
-  // connectProvider();
-
-  async function connectProvider() {
-    await getAccountInfo();
-  }
-
   async function getAccountInfo() {
     provider = await web3Modal.connect();
-    web3 = new Web3(provider);
+    web3 = await new Web3(provider);
 
     if (web3.eth) {
       let accounts = await web3.eth.getAccounts();
@@ -73,55 +73,126 @@ function App() {
     setConnectButtonText("Wallet Connected");
     setConnectVariantColor("success");
 
-    if(window.ethereum.chainId = "0x13881"){
+    if(window.ethereum.chainId === "0x13881") {
       console.log("CONNECTED TO POLYGON TESTNET");
       setNetworkNameText("Polygon Testnet");
-
-      testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
-      unifaucetInstance = await new web3.eth.Contract(iunifaucet, testFaucetAddr);
-
-      // TestToken deployed on Mumbai
-      testTokenAddr = "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102";
-      standardTokenInstance = await new web3.eth.Contract(standardtoken, testTokenAddr);
-      console.log(standardTokenInstance);
-      // stakeContract = await new web3.eth.Contract(irainbowstake, "0x4E22Bee97d8FcCb9C518060CdDADCEE31C384530");
-
-      //approve token for spending on the faucet add liq addr
       console.log("Using account: " + account);
-      await standardTokenInstance.methods.approve(testFaucetAddr, 100).send({from: account});
     }
+
+    return [web3, account];
   }
 
-  //function addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
-  async function addLiquidity() {
-    console.log("DONE");
-    //add liquidity
-    /*await unifaucetInstance.methods.addLiquidity(
-      testTokenAddr,
-      standardTokenAmt,
-      account
-    ).call();
-
-    //get stake amount to confirm with user
-    let amount = 0;
-   amount = await stakeContract.methods.balanceOf(account).call();
-   console.log("AMOUNT: " + amount); */
-  }
-
-  //function removeLiquidity(address tokenA, uint liquidity, address to) external returns (uint amountA);
-  async function removeLiquidity() {
-    //get token var/addr from user input
-    //approve token for spending on the faucet add liq addr
-    //remove liquidity
-  }
+  // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
+  // faucetAddLiquidity = () => {
+  //   let testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
+  //   let unifaucetInstance = new this.props.web3.eth.Contract(iunifaucet, testFaucetAddr);
+  //   let testTokenAddr = "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102";
+  //   let standardTokenInstance = new this.props.web3.eth.Contract(standardtoken, testTokenAddr);
   //
-  //From RainbowStake
-  //function getReserve() public view override returns (uint _reserve0);
+  //   standardTokenInstance.methods.approve(testFaucetAddr, this.state.tokenAmount).send({from: this.props.account});
+  //   unifaucetInstance.methods.addLiquidity(testTokenAddr, this.state.tokenAmount, this.props.account).send({from: this.props.account});
+  //
+  //   //get stake amount to confirm with user
+  //   let amount = 0;
+  //   // amount = stakeContract.methods.balanceOf(this.props.account).call();
+  //   console.log("AMOUNT: " + amount);
+  // };
 
+  // drip(address token, address to) public payable override returns (uint amount)
+  const faucetDrip = async () => {
+    let [web3, account] = await getAccountInfo();
+    let testFaucetAddr = "0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1";
+    let testTokenAddr = "0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102";
+
+    let unifaucetInstance = await new web3.eth.Contract(iunifaucet, testFaucetAddr);
+    let standardTokenInstance = await new web3.eth.Contract(standardtoken, testTokenAddr);
+
+    if (account) {
+      let response = await unifaucetInstance.methods.drip(testTokenAddr, account).send({from: account});
+      console.log("RESPONSE: " + response);
+    }
+  };
+
+    return (
+        <>
+          <div>
+            <h2 style={{color: "white"}}><b>[UniFaucet]</b></h2>
+            <br/>
+            <h5 style={{color: "#828282"}}>A faucet for reflect tokens</h5>
+            <br></br>
+            <br></br>
+          </div>
+          <div className="row">
+            <div className="col-sm-4 offset-sm-4">
+              <Form>
+                <Form.Group className="mb-3" controlId="formSelect">
+                  <Form.Control
+                      className="form-select token-btn"
+                      as="select"
+                      aria-label="Default select example"
+                  >
+                    <option>Token</option>
+                    <option value="1">Hoge</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-4">
+              <Button variant="primary" onClick={handleShow} className="position-absolute top-50">
+                Stake &gt;&gt;
+              </Button>
+            </div>
+            <div className="col-sm-4">
+              <img src={faucetlogo} alt="Logo"/>;
+            </div>
+          </div>
+          <div className="collect-btn">
+          <span>
+            <span id="tokenamount">6,000,000,000 HOGE</span>
+            <Button variant="success" className="mx-2" onClick={faucetDrip}>
+              &lt;&lt; Collect{" "}
+            </Button>
+          </span>
+          </div>
+
+          <Modal show={showModal} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Stake Tokens</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Stake Your Tokens in the Faucet
+              <label> Token Addr:
+                <input type="text" name="tokenAddrInput" id="tokenAddr" list="verifiedtokens"></input>
+              </label>
+              <datalist id="verifiedtokens">
+                <option value="0x0">HOGE</option>
+                <option value="0x0">Test Token</option>
+              </datalist>
+              <div style={{margin: "1em"}}>
+                <label> Amount:
+                  <input type="text" name="amountInput" id="amountAddr"></input>
+                </label>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+    );
+}
+
+function App() {
   return (
     <div className="App">
       <div className="container">
-      <Header connectVariantColor = {connectVariantColor} connectButtonText = {connectButtonText} />
+      {/*<Header connectVariantColor = {connectVariantColor} connectButtonText = {connectButtonText} />*/}
       <Faucet />
       </div>
     </div>

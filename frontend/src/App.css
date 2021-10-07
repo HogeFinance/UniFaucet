@@ -127,3 +127,7 @@ h2, h3 {
   /* Gray/500 */
   border: 1.66667px solid #667085;
 }
+
+#overrides .stake-btn {
+  color: black;
+}
