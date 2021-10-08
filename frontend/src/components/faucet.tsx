@@ -14,6 +14,7 @@ import { Form, Modal, Button } from 'react-bootstrap'
 
 import faucetlogo from '../img/faucet.png'
 import stakeButton from '../img/stake_btn.svg'
+import poweredBy from '../img/credit.svg'
 import StakeModal from './stakeModal'
 
 const Faucet: React.FC<{}> = () => {
@@ -72,6 +73,7 @@ const Faucet: React.FC<{}> = () => {
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
   const [connectButtonText, setConnectButtonText] = useState('Not Connected')
   const [network, setNetworkText] = useState('not connected')
+  const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
   const [account, setAccountText] = useState(null)
   const [networkName, setNetworkNameText] = useState('')
 
@@ -246,6 +248,20 @@ const Faucet: React.FC<{}> = () => {
     line-height: 24px;
     color: #222628;
   `
+
+  const PoweredBy = styled.img`
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+  `
+
+  const WarnMessage = styled.span`
+    color: #ff9000;
+    font-family: 'Pixeboy', sans-serif;
+    display: block;
+    margin-top: 30px;
+    font-size: 22px;
+  `
   // Render
 
   return (
@@ -253,6 +269,11 @@ const Faucet: React.FC<{}> = () => {
       <Heading>
         <Title>[UniFaucet]</Title>
         <SubTitle>A faucet for reflect tokens</SubTitle>
+        {showNetworkWarning && (
+          <WarnMessage>
+            [ You are currently using an unsupported network. ]
+          </WarnMessage>
+        )}
       </Heading>
 
       <FaucetSection>
@@ -283,7 +304,9 @@ const Faucet: React.FC<{}> = () => {
           </CollectionArea>
         </FaucetBottom>
       </FaucetSection>
-
+      <a href="https://hogefinance.com/" target="_blank" rel="noreferrer">
+        <PoweredBy src={poweredBy} />
+      </a>
       <StakeModal
         showModal={showModal}
         handleClose={handleClose}
