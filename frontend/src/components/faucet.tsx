@@ -70,6 +70,18 @@ const Faucet: React.FC<{}> = () => {
 
   let provider = null
   let web3: any = null
+  let chainLookup = {
+    "Ethereum Mainnet": "1",
+    "Ethereum Testnet Rinkeby": "3",
+    "Binance Smart Chain": "56",
+    "xDai Chain": "100",
+    "Polygon Mainnet": "137",
+    "Arbitrum on xDai": "200",
+    "Fantom Opera": "250",
+    "Fantom Testnet": "4002",
+    "Arbitrum One": "42161",
+    "Arbitrum Testnet Rinkeby": "421611"
+  }
 
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
   const [connectButtonText, setConnectButtonText] = useState('Not Connected')
@@ -283,7 +295,7 @@ const Faucet: React.FC<{}> = () => {
 
   return (
     <Wrapper>
-      <Header connectVariantColor={connectVariantColor} connectButtonText={connectButtonText}/>
+      <Header connectVariantColor={connectVariantColor} connectButtonText={connectButtonText} connectWallet={getAccountInfo} />
       <Heading>
         <Title>[UniFaucet]</Title>
         <SubTitle>A faucet for reflect tokens</SubTitle>

@@ -1,7 +1,7 @@
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
-const Header: React.FC<{ connectVariantColor: string, connectButtonText: string }> = ({ connectVariantColor, connectButtonText }) => {
+const Header: React.FC<{ connectVariantColor: string, connectButtonText: string, connectWallet: MouseEventHandler<HTMLElement> }> = ({ connectVariantColor, connectButtonText, connectWallet }) => {
 
 
   const buttonStyle = {
@@ -34,7 +34,7 @@ const Header: React.FC<{ connectVariantColor: string, connectButtonText: string 
               </NavDropdown>
             </Nav>
             </Navbar.Collapse> */ }
-          <Button style={buttonStyle} variant={connectVariantColor} className=" buttonRight">
+          <Button style={buttonStyle} variant={connectVariantColor} className=" buttonRight" onClick={connectWallet}>
             {connectButtonText}
           </Button>
         </Container>
