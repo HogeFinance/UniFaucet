@@ -2,12 +2,17 @@ import React from "react";
 import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 const Header: React.FC<{ connectVariantColor: string, connectButtonText: string }> = ({ connectVariantColor, connectButtonText }) => {
+
+
+  const buttonStyle = {
+    "marginLeft": 'auto',
+    "marginRight": 'auto',
+  };
+
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">UniFaucet</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
           { /* <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="#home">Home</Nav.Link>
@@ -29,7 +34,7 @@ const Header: React.FC<{ connectVariantColor: string, connectButtonText: string 
               </NavDropdown>
             </Nav>
             </Navbar.Collapse> */ }
-          <Button variant={connectVariantColor} className="pull-right, mx-2">
+          <Button style={buttonStyle} variant={connectVariantColor} className=" buttonRight">
             {connectButtonText}
           </Button>
         </Container>

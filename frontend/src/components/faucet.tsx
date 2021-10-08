@@ -16,6 +16,7 @@ import faucetlogo from '../img/faucet.png'
 import stakeButton from '../img/stake_btn.svg'
 import poweredBy from '../img/credit.svg'
 import StakeModal from './stakeModal'
+import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
   // Logic code
@@ -190,12 +191,25 @@ const Faucet: React.FC<{}> = () => {
   `
   const FaucetMain = styled.div`
     margin-right: 115px;
+    @media only screen and (max-width: 768px) {
+      margin-right: 10px;
+    }
   `
   const StakeButton = styled.img`
     margin-bottom: 160px;
     cursor: pointer;
+    @media only screen and (max-width: 768px) {
+      margin-bottom: 23%;
+    }
   `
-  const FaucetVisual = styled.img``
+  const FaucetVisual = styled.img`
+  
+  @media only screen and (max-width: 768px) {
+    width: 50%;
+  }
+  
+  
+  `
   const FaucetBottom = styled.div``
   const CollectionArea = styled.div`
     display: flex;
@@ -205,6 +219,9 @@ const Faucet: React.FC<{}> = () => {
     height: 40px;
     width: min-content;
     margin-left: 250px;
+    @media only screen and (max-width: 768px) {
+     margin-left: 0px;
+    }
   `
   const OutputValue = styled.input`
     border-top-left-radius: 4px;
@@ -266,6 +283,7 @@ const Faucet: React.FC<{}> = () => {
 
   return (
     <Wrapper>
+      <Header connectVariantColor={connectVariantColor} connectButtonText={connectButtonText}/>
       <Heading>
         <Title>[UniFaucet]</Title>
         <SubTitle>A faucet for reflect tokens</SubTitle>

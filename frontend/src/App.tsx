@@ -6,7 +6,6 @@ const App: React.FunctionComponent = () => {
   return (
     <div className="App">
       <div className="container">
-        {/*<Header connectVariantColor = {connectVariantColor} connectButtonText = {connectButtonText} />*/}
         <Faucet />
       </div>
     </div>
