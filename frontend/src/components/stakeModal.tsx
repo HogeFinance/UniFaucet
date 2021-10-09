@@ -1,12 +1,14 @@
 import { Button, Modal } from 'react-bootstrap'
-import React, { FocusEvent } from 'react'
+import React, {FocusEvent, useState} from 'react'
 import styled from 'styled-components'
+import {iunifaucet, standardtoken} from "../contractabi";
+import Web3 from 'web3'
 
 interface Props {
   showModal: boolean
   handleClose: () => void
-  handleLiquidityBlur: (e: FocusEvent<HTMLInputElement>) => void
-  handleLiquidityAmtBlur: (e: FocusEvent<HTMLInputElement>) => void
+  getAccountInfo: () => Promise<any>
+  faucetAddr: string
 }
 
 const Tagline = styled.span`
@@ -38,9 +40,38 @@ const InputWrapper = styled.div`
 const StakeModal: React.FC<Props> = ({
   showModal,
   handleClose,
-  handleLiquidityAmtBlur,
-  handleLiquidityBlur,
+  getAccountInfo,
+  faucetAddr
 }) => {
+  const [liquidityAddAddr, setLiquidityAddAddr] = useState('')
+  const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
+
+  const handleLiquidityBlur = (e: FocusEvent<HTMLInputElement>) =>
+      setLiquidityAddAddr(e.target.value)
+  const handleLiquidityAmtBlur = (e: FocusEvent<HTMLInputElement>) =>
+      setLiquidityAddAmt(e.target.value)
+
+  // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
+  const faucetAddLiquidity = async () => {
+    if (!liquidityAddAmt) return // TODO add check for number
+
+    let [web3, account] = await getAccountInfo()
+    let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
+    let standardTokenInstance = new web3.eth.Contract(standardtoken, liquidityAddAddr)
+
+    let response = await standardTokenInstance.methods
+        .approve(faucetAddr, liquidityAddAmt)
+        .send({ from: account })
+    console.log('APPROVE RESPONSE: ' + response)
+    response = await unifaucetInstance.methods
+        .addLiquidity(liquidityAddAddr, liquidityAddAmt, account)
+        .send({ from: account })
+    console.log('LIQUIDITY RESPONSE: ' + response)
+
+    // Confirm with user
+    // let amount = await stakeContract.methods.balanceOf(account).call()
+  }
+
   return (
     <Modal show={showModal} onHide={handleClose}>
       <Modal.Header>
@@ -85,7 +116,7 @@ const StakeModal: React.FC<Props> = ({
           Close
         </Button>
         <Button variant="primary" onClick={handleClose}>
-          Save Changes
+          Add Liquidity
         </Button>
       </Modal.Footer>
     </Modal>

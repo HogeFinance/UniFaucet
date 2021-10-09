@@ -19,18 +19,29 @@ import StakeModal from './stakeModal'
 import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
+  // Changes based on network
+  const faucetAddr = '0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1'
+
   // Logic code
   const [showModal, setShow] = useState(false)
   const [outputAmount, setOutputAmount] = useState('10.000.000 HOGE')
-  const [liquidityAddAddr, setLiquidityAddAddr] = useState('')
-  const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
+  const [connectVariantColor, setConnectVariantColor] = useState('danger')
+  const [connectButtonText, setConnectButtonText] = useState('Not Connected')
+  const [network, setNetworkText] = useState('not connected')
+  const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
+  const [account, setAccountText] = useState(null)
+  const [networkName, setNetworkNameText] = useState('')
+
+  let unifaucetInstance: any = null
+  let standardTokenInstance: any = null
+  let stakeContract: any = null
+  let testFaucetAddr: any = null
+  let testTokenAddr: any = null
+  let provider = null
+  let web3: any = null
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-  const handleLiquidityBlur = (e: FocusEvent<HTMLInputElement>) =>
-    setLiquidityAddAddr(e.target.value)
-  const handleLiquidityAmtBlur = (e: FocusEvent<HTMLInputElement>) =>
-    setLiquidityAddAmt(e.target.value)
 
   var tokenlist = [
     {
@@ -40,6 +51,19 @@ const Faucet: React.FC<{}> = () => {
     },
     { id: 2, name: 'Hoge', address: '' },
   ]
+
+  let chainLookup = {
+    "1": "Ethereum Mainnet",
+    "3": "Ethereum Testnet Rinkeby",
+    "56": "Binance Smart Chain",
+    "100": "xDai Chain",
+    "137": "Polygon Mainnet",
+    "200": "Arbitrum on xDai",
+    "250": "Fantom Opera",
+    "4002": "Fantom Testnet",
+    "42161": "Arbitrum One",
+    "421611": "Arbitrum Testnet Rinkeby"
+  }
 
   const providerOptions = {
     injected: {
@@ -68,34 +92,6 @@ const Faucet: React.FC<{}> = () => {
     providerOptions, // required
   })
 
-  let provider = null
-  let web3: any = null
-  let chainLookup = {
-    "Ethereum Mainnet": "1",
-    "Ethereum Testnet Rinkeby": "3",
-    "Binance Smart Chain": "56",
-    "xDai Chain": "100",
-    "Polygon Mainnet": "137",
-    "Arbitrum on xDai": "200",
-    "Fantom Opera": "250",
-    "Fantom Testnet": "4002",
-    "Arbitrum One": "42161",
-    "Arbitrum Testnet Rinkeby": "421611"
-  }
-
-  const [connectVariantColor, setConnectVariantColor] = useState('danger')
-  const [connectButtonText, setConnectButtonText] = useState('Not Connected')
-  const [network, setNetworkText] = useState('not connected')
-  const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
-  const [account, setAccountText] = useState(null)
-  const [networkName, setNetworkNameText] = useState('')
-
-  let unifaucetInstance: any = null
-  let standardTokenInstance: any = null
-  let stakeContract: any = null
-  let testFaucetAddr: any = null
-  let testTokenAddr: any = null
-
   async function getAccountInfo() {
     provider = await web3Modal.connect()
     web3 = await new Web3(provider)
@@ -111,44 +107,18 @@ const Faucet: React.FC<{}> = () => {
 
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
-
-    if (window.ethereum.chainId === '0x13881') {
-      console.log('CONNECTED TO POLYGON TESTNET')
-      setNetworkNameText('Polygon Testnet')
-      console.log('Using account: ' + account)
-    }
+    setNetworkNameText('Polygon Testnet')
 
     return [web3, account]
-  }
-
-  // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
-  const faucetAddLiquidity = async (tokenAddr: string, tokenAmount: string) => {
-    let faucetAddr = '0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1'
-    let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
-    let standardTokenInstance = new web3.eth.Contract(standardtoken, tokenAddr)
-
-    let response = await standardTokenInstance.methods
-      .approve(faucetAddr, tokenAmount)
-      .send({ from: account })
-    console.log('APPROVE RESPONSE: ' + response)
-    response = await unifaucetInstance.methods
-      .addLiquidity(testTokenAddr, tokenAmount, account)
-      .send({ from: account })
-    console.log('LIQUIDITY RESPONSE: ' + response)
-
-    // Confirm with user
-    let amount = 0
-    amount = stakeContract.methods.balanceOf(account).call()
   }
 
   // drip(address token, address to) public payable override returns (uint amount)
   const faucetDrip = async () => {
     let [web3, account] = await getAccountInfo()
-    let testFaucetAddr = '0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1'
     let testTokenAddr = '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102'
     let unifaucetInstance = await new web3.eth.Contract(
       iunifaucet,
-      testFaucetAddr
+      faucetAddr
     )
 
     if (account) {
@@ -334,14 +304,14 @@ const Faucet: React.FC<{}> = () => {
           </CollectionArea>
         </FaucetBottom>
       </FaucetSection>
-      <a href="https://hogefinance.com/" target="_blank" rel="noreferrer">
+      <a href="https://github.com/HogeFinance/UniFaucet" target="_blank" rel="noreferrer">
         <PoweredBy src={poweredBy} />
       </a>
       <StakeModal
         showModal={showModal}
         handleClose={handleClose}
-        handleLiquidityAmtBlur={handleLiquidityAmtBlur}
-        handleLiquidityBlur={handleLiquidityBlur}
+        getAccountInfo={getAccountInfo}
+        faucetAddr={faucetAddr}
       />
     </Wrapper>
   )
