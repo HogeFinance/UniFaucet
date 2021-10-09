@@ -11,10 +11,6 @@ interface Props {
   faucetAddr: string
 }
 
-const Tagline = styled.span`
-  margin-bottom: 20px;
-  display: block;
-`
 const InputsContainer = styled.div`
   display: grid;
   grid-template-columns: 0.5fr 1fr;
@@ -78,7 +74,6 @@ const StakeModal: React.FC<Props> = ({
         <Modal.Title>Stake Tokens</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Tagline>Stake Your Tokens in the Faucet</Tagline>
         <InputsContainer>
           <Labels>
             <Label>Token Address:</Label>
@@ -112,9 +107,6 @@ const StakeModal: React.FC<Props> = ({
         </InputsContainer>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
         <Button variant="primary" onClick={handleClose}>
           Add Liquidity
         </Button>
