@@ -2,6 +2,9 @@ import Web3 from 'web3'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import styled from 'styled-components'
+import CreatableSelect from 'react-select/creatable';
+// import { ColourOption, colourOptions } from '../data';
+import { ActionMeta, OnChangeValue } from 'react-select';
 
 import {
   irainbowstake,
@@ -31,6 +34,7 @@ const Faucet: React.FC<{}> = () => {
   const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
   const [account, setAccountText] = useState(null)
   const [networkName, setNetworkNameText] = useState('')
+  const [dripToken, setDripToken] = useState('')
 
   let unifaucetInstance: any = null
   let standardTokenInstance: any = null
@@ -43,13 +47,15 @@ const Faucet: React.FC<{}> = () => {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const handleChange = (newObject: OnChangeValue<any, false>) => {
+    console.group('Value Changed')
+    console.log(newObject)
+    setDripToken(newObject.value)
+  }
+
   var tokenlist = [
-    {
-      id: 1,
-      name: 'TestToken',
-      address: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102',
-    },
-    { id: 2, name: 'Hoge', address: '' },
+    { label: 'TestToken', value: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102' },
+    { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
   ]
 
   let chainLookup = {
@@ -115,15 +121,17 @@ const Faucet: React.FC<{}> = () => {
   // drip(address token, address to) public payable override returns (uint amount)
   const faucetDrip = async () => {
     let [web3, account] = await getAccountInfo()
-    let testTokenAddr = '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102'
+    if (!account || !dripToken) return;
     let unifaucetInstance = await new web3.eth.Contract(
       iunifaucet,
       faucetAddr
     )
 
+    console.log("Drip: " + dripToken)
+    console.log("Account: " + account)
     if (account) {
       let response = await unifaucetInstance.methods
-        .drip(testTokenAddr, account)
+        .drip(dripToken, account)
         .send({ from: account })
       console.log('RESPONSE: ' + response)
     }
@@ -280,14 +288,11 @@ const Faucet: React.FC<{}> = () => {
         <FaucetTop>
           <Form>
             <Form.Group className="mb-3" controlId="formSelect">
-              <Form.Control
-                className="form-select token-btn"
-                as="select"
-                aria-label="Default select example"
-              >
-                <option>Token</option>
-                <option value="1">Hoge</option>
-              </Form.Control>
+              <CreatableSelect
+                  isClearable
+                  onChange={handleChange}
+                  options={tokenlist}
+              />
             </Form.Group>
           </Form>
         </FaucetTop>
