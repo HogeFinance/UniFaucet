@@ -1,6 +1,6 @@
 import { Button, Modal } from 'react-bootstrap'
 import React, {FocusEvent, useState} from 'react'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 import {iunifaucet, standardtoken} from "../contractabi";
 import Web3 from 'web3'
 
@@ -32,6 +32,10 @@ const InputWrapper = styled.div`
     width: 100%;
   }
 `
+
+const ModalBackground = {
+ 
+};
 
 const StakeModal: React.FC<Props> = ({
   showModal,
@@ -107,7 +111,10 @@ const StakeModal: React.FC<Props> = ({
         </InputsContainer>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>
+      <Button variant="primary" onClick={handleClose}>
+         Close
+        </Button>
+        <Button variant="primary" onClick={faucetAddLiquidity}>
           Add Liquidity
         </Button>
       </Modal.Footer>

@@ -131,3 +131,10 @@ h2, h3 {
 #overrides .stake-btn {
   color: black;
 }
+
+.modal-content{
+
+  color: white;
+  background-color: #212529 !important;
+
+}

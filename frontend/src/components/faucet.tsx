@@ -48,6 +48,8 @@ const Faucet: React.FC<{}> = () => {
   const handleShow = () => setShow(true)
 
   const handleChange = (newObject: OnChangeValue<any, false>) => {
+    if(newObject == null) return;
+    
     console.group('Value Changed')
     console.log(newObject)
     setDripToken(newObject.value)
@@ -115,12 +117,14 @@ const Faucet: React.FC<{}> = () => {
     setConnectVariantColor('success')
     setNetworkNameText('Polygon Testnet')
 
+
     return [web3, account]
   }
 
   // drip(address token, address to) public payable override returns (uint amount)
   const faucetDrip = async () => {
     let [web3, account] = await getAccountInfo()
+
     if (!account || !dripToken) return;
     let unifaucetInstance = await new web3.eth.Contract(
       iunifaucet,
@@ -289,9 +293,9 @@ const Faucet: React.FC<{}> = () => {
           <Form>
             <Form.Group className="mb-3" controlId="formSelect">
               <CreatableSelect
-                  isClearable
-                  onChange={handleChange}
-                  options={tokenlist}
+                isClearable
+                onChange={handleChange}
+                options={tokenlist}
               />
             </Form.Group>
           </Form>
