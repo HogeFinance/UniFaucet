@@ -2,7 +2,6 @@ import { Button, Modal } from 'react-bootstrap'
 import React, {FocusEvent, useState} from 'react'
 import styled from 'styled-components'
 import {iunifaucet, standardtoken} from "../contractabi";
-import Web3 from 'web3'
 
 interface Props {
   showModal: boolean
@@ -39,33 +38,44 @@ const StakeModal: React.FC<Props> = ({
   getAccountInfo,
   faucetAddr
 }) => {
-  const [liquidityAddAddr, setLiquidityAddAddr] = useState('')
+  const [tokenAddress, setTokenAddress] = useState('')
   const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
 
-  const handleLiquidityBlur = (e: FocusEvent<HTMLInputElement>) =>
-      setLiquidityAddAddr(e.target.value)
+  const handleTokenChange = (e: FocusEvent<HTMLInputElement>) =>
+    setTokenAddress(e.target.value)
+
   const handleLiquidityAmtBlur = (e: FocusEvent<HTMLInputElement>) =>
-      setLiquidityAddAmt(e.target.value)
+    setLiquidityAddAmt(e.target.value)
 
   // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
   const faucetAddLiquidity = async () => {
-    if (!liquidityAddAmt) return // TODO add check for number
-
     let [web3, account] = await getAccountInfo()
     let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
-    let standardTokenInstance = new web3.eth.Contract(standardtoken, liquidityAddAddr)
+
+    let response = await unifaucetInstance.methods
+      .addLiquidity(tokenAddress, liquidityAddAmt, account)
+      .send({ from: account })
+  }
+
+  const approve = async () => {
+    // Add some input checks here
+    if (!liquidityAddAmt) return
+
+    let [web3, account] = await getAccountInfo()
+    let standardTokenInstance = new web3.eth.Contract(standardtoken, tokenAddress)
 
     let response = await standardTokenInstance.methods
         .approve(faucetAddr, liquidityAddAmt)
         .send({ from: account })
-    console.log('APPROVE RESPONSE: ' + response)
-    response = await unifaucetInstance.methods
-        .addLiquidity(liquidityAddAddr, liquidityAddAmt, account)
-        .send({ from: account })
-    console.log('LIQUIDITY RESPONSE: ' + response)
+  }
 
-    // Confirm with user
-    // let amount = await stakeContract.methods.balanceOf(account).call()
+  const faucetRemoveLiquidity = async () => {
+    let [web3, account] = await getAccountInfo()
+    let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
+
+    let response = await unifaucetInstance.methods
+        .removeLiquidity(tokenAddress, liquidityAddAmt, account)
+        .send({ from: account })
   }
 
   return (
@@ -82,11 +92,11 @@ const StakeModal: React.FC<Props> = ({
           <Inputs>
             <InputWrapper>
               <input
-                type="text"
-                name="tokenAddrInput"
-                id="tokenAddr"
-                list="verifiedtokens"
-                onBlur={handleLiquidityBlur}
+                  type="text"
+                  name="tokenAddrInput"
+                  id="tokenAddr"
+                  list="verifiedtokens"
+                  onBlur={handleTokenChange}
               ></input>
               <datalist id="verifiedtokens">
                 <option value="0x0">HOGE</option>
@@ -97,17 +107,23 @@ const StakeModal: React.FC<Props> = ({
             </InputWrapper>
             <InputWrapper>
               <input
-                type="text"
-                name="amountInput"
-                id="amountAddr"
-                onBlur={handleLiquidityAmtBlur}
+                  type="text"
+                  name="amountInput"
+                  id="amountAddr"
+                  onBlur={handleLiquidityAmtBlur}
               ></input>
             </InputWrapper>
           </Inputs>
         </InputsContainer>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={handleClose}>
+        <Button variant="danger" onClick={faucetRemoveLiquidity}>
+          Remove Liquidity
+        </Button>
+        <Button variant="secondary" onClick={approve}>
+          Approve
+        </Button>
+        <Button variant="primary" onClick={faucetAddLiquidity}>
           Add Liquidity
         </Button>
       </Modal.Footer>
