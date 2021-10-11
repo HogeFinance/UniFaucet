@@ -3,13 +3,11 @@ import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import styled from 'styled-components'
 import CreatableSelect from 'react-select/creatable';
-// import { ColourOption, colourOptions } from '../data';
 import { ActionMeta, OnChangeValue } from 'react-select';
 
 import {
-  irainbowstake,
   irainbowerc20,
-  standardtoken,
+  irainbowfactory,
   iunifaucet,
 } from '../contractabi'
 import React, { useState, FocusEvent } from 'react'
@@ -23,24 +21,20 @@ import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
   // Changes based on network
-  const faucetAddr = '0xCbFE3b27fbD33a33ebDA18ec607Cfde4344A10C1'
+  const faucetAddr = '0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6'
+  const factoryAddr = '0x1d0D97Ecc3490189762754713a23394D9337c22A'
+  const defaultToken = { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' }
 
   // Logic code
   const [showModal, setShow] = useState(false)
   const [outputAmount, setOutputAmount] = useState('10.000.000 HOGE')
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
   const [connectButtonText, setConnectButtonText] = useState('Not Connected')
-  const [network, setNetworkText] = useState('not connected')
   const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
   const [account, setAccountText] = useState(null)
   const [networkName, setNetworkNameText] = useState('')
-  const [dripToken, setDripToken] = useState('')
+  const [dripObject, setDripObject] = useState(defaultToken)
 
-  let unifaucetInstance: any = null
-  let standardTokenInstance: any = null
-  let stakeContract: any = null
-  let testFaucetAddr: any = null
-  let testTokenAddr: any = null
   let provider = null
   let web3: any = null
 
@@ -49,30 +43,24 @@ const Faucet: React.FC<{}> = () => {
 
   const handleChange = (newObject: OnChangeValue<any, false>) => {
     if(newObject == null) return;
-    
-    console.group('Value Changed')
-    console.log(newObject)
-    setDripToken(newObject.value)
-    console.groupEnd();
-  }
+    setDripObject(newObject)
 
-  const handleInputChange = (newObject: OnChangeValue<any, false>) => {
-    if(newObject == null) return;
-    
-    console.group('Input Changed')
-    console.log(newObject)
-    setDripToken(newObject.value)
-    console.groupEnd();
+    // Dunno why this doesn't work?
+    // const factoryInstance = new web3.eth.Contract(irainbowfactory, factoryAddr)
+    // const stakeAddr = factoryInstance.methods.getStake(newObject.value).call()
+    // const stakeInstance = new web3.eth.Contract(irainbowerc20, stakeAddr)
+    // const balance = stakeInstance.methods.balanceOf(account).call().call()
+    // setOutputAmount(balance)
   }
 
   var tokenlist = [
-    { label: 'TestToken (Polygon Testnet)', value: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102' },
-    { label: 'Hoge (Ethereum)', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
+    { label: 'TestToken', value: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102' },
+    { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
   ]
 
-  let chainLookup = {
+  const chainLookup : Record<string, string> = {
     "1": "Ethereum Mainnet",
-    "3": "Ethereum Testnet Rinkeby",
+    "4": "Ethereum Testnet Rinkeby",
     "56": "Binance Smart Chain",
     "100": "xDai Chain",
     "137": "Polygon Mainnet",
@@ -81,6 +69,11 @@ const Faucet: React.FC<{}> = () => {
     "4002": "Fantom Testnet",
     "42161": "Arbitrum One",
     "421611": "Arbitrum Testnet Rinkeby"
+  }
+
+  const faucetLookup : Record<string, string> = {
+    "1": "",
+    "4": "0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6"
   }
 
   const providerOptions = {
@@ -105,6 +98,7 @@ const Faucet: React.FC<{}> = () => {
       },
     },
   }
+
   let web3Modal = new Web3Modal({
     cacheProvider: true, // optional
     providerOptions, // required
@@ -117,16 +111,11 @@ const Faucet: React.FC<{}> = () => {
     if (web3.eth) {
       let accounts = await web3.eth.getAccounts()
       setAccountText(accounts[0])
-      console.log(account)
     }
-    setNetworkText(web3.eth.chainId)
-    console.log('Account Connected: ' + account)
-    console.log('Network: ' + web3.eth.chainId)
 
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
-    setNetworkNameText('Polygon Testnet')
-
+    setNetworkNameText(chainLookup[provider.networkVersion])
 
     return [web3, account]
   }
@@ -134,20 +123,24 @@ const Faucet: React.FC<{}> = () => {
   // drip(address token, address to) public payable override returns (uint amount)
   const faucetDrip = async () => {
     let [web3, account] = await getAccountInfo()
+    const dripToken = dripObject.value
 
     if (!account || !dripToken) return;
-    let unifaucetInstance = await new web3.eth.Contract(
-      iunifaucet,
-      faucetAddr
-    )
+    const unifaucetInstance = await new web3.eth.Contract(iunifaucet, faucetAddr)
 
-    console.log("Drip: " + dripToken)
-    console.log("Account: " + account)
-    if (account) {
+    try {
+      const feeAmount = await unifaucetInstance.methods
+        .feeAmount.call().call(function(error: any, value: any) {
+          console.log(value) // Move drip inside here
+        })
+
       let response = await unifaucetInstance.methods
         .drip(dripToken, account)
-        .send({ from: account })
-      console.log('RESPONSE: ' + response)
+        .send({from: account, value: feeAmount})
+    }
+    catch(e) {
+      const result = (e as Error).message
+      alert(result)
     }
   }
 
@@ -305,7 +298,6 @@ const Faucet: React.FC<{}> = () => {
               <CreatableSelect
                 isClearable
                 onChange={handleChange}
-                onInputChange={handleInputChange}
                 options={tokenlist}
               />
             </Form.Group>

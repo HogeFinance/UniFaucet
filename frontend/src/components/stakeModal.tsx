@@ -56,30 +56,46 @@ const StakeModal: React.FC<Props> = ({
     let [web3, account] = await getAccountInfo()
     let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
 
-    let response = await unifaucetInstance.methods
-      .addLiquidity(tokenAddress, liquidityAddAmt, account)
-      .send({ from: account })
+    try {
+      let response = await unifaucetInstance.methods
+          .addLiquidity(tokenAddress, liquidityAddAmt, account)
+          .send({from: account})
+    }
+    catch(e) {
+      const result = (e as Error).message
+      alert(result)
+    }
   }
 
   const approve = async () => {
     // Add some input checks here
-    if (!liquidityAddAmt) return
-
     let [web3, account] = await getAccountInfo()
     let standardTokenInstance = new web3.eth.Contract(standardtoken, tokenAddress)
 
-    let response = await standardTokenInstance.methods
-        .approve(faucetAddr, liquidityAddAmt)
-        .send({ from: account })
+    try {
+      let response = await standardTokenInstance.methods
+          .approve(faucetAddr, liquidityAddAmt)
+          .send({from: account})
+    }
+    catch(e) {
+      const result = (e as Error).message
+      alert(result)
+    }
   }
 
   const faucetRemoveLiquidity = async () => {
     let [web3, account] = await getAccountInfo()
     let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
 
-    let response = await unifaucetInstance.methods
-        .removeLiquidity(tokenAddress, liquidityAddAmt, account)
-        .send({ from: account })
+    try {
+      let response = await unifaucetInstance.methods
+          .removeLiquidity(tokenAddress, liquidityAddAmt, account)
+          .send({from: account})
+    }
+    catch(e) {
+      const result = (e as Error).message
+      alert(result)
+    }
   }
 
   return (
