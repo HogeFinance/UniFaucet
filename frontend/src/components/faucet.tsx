@@ -53,11 +53,21 @@ const Faucet: React.FC<{}> = () => {
     console.group('Value Changed')
     console.log(newObject)
     setDripToken(newObject.value)
+    console.groupEnd();
+  }
+
+  const handleInputChange = (newObject: OnChangeValue<any, false>) => {
+    if(newObject == null) return;
+    
+    console.group('Input Changed')
+    console.log(newObject)
+    setDripToken(newObject.value)
+    console.groupEnd();
   }
 
   var tokenlist = [
-    { label: 'TestToken', value: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102' },
-    { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
+    { label: 'TestToken (Polygon Testnet)', value: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102' },
+    { label: 'Hoge (Ethereum)', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
   ]
 
   let chainLookup = {
@@ -91,11 +101,11 @@ const Faucet: React.FC<{}> = () => {
       },
       package: WalletConnectProvider,
       options: {
-        infuraId: 'INFURA_ID', // required
+        infuraId: 'TEST', // required
       },
     },
   }
-  const web3Modal = new Web3Modal({
+  let web3Modal = new Web3Modal({
     cacheProvider: true, // optional
     providerOptions, // required
   })
@@ -109,9 +119,9 @@ const Faucet: React.FC<{}> = () => {
       setAccountText(accounts[0])
       console.log(account)
     }
-    setNetworkText(window.ethereum.chainId)
+    setNetworkText(web3.eth.chainId)
     console.log('Account Connected: ' + account)
-    console.log('Network: ' + window.ethereum.chainId)
+    console.log('Network: ' + web3.eth.chainId)
 
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
@@ -295,6 +305,7 @@ const Faucet: React.FC<{}> = () => {
               <CreatableSelect
                 isClearable
                 onChange={handleChange}
+                onInputChange={handleInputChange}
                 options={tokenlist}
               />
             </Form.Group>
