@@ -6,19 +6,10 @@ import './RainbowStake.sol';
 // Interaction Contracts - https://github.com/Uniswap/v2-periphery/tree/master/contracts/interfaces
 // Core Contracts - https://github.com/Uniswap/v2-core/tree/master/contracts
 contract RainbowFactory is IRainbowFactory {
-    address public override feeTo;
-    address public override feeToSetter;
-
-//    bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(RainbowStake).creationCode));
-
     mapping(address => address) public override getStake;
     address[] public override allStakes;
 
-//    event StakeCreated(address indexed token0, address stake, uint);
-
-    constructor(address _feeToSetter) public {
-        feeToSetter = _feeToSetter;
-    }
+    constructor() public {}
 
     function allStakesLength() external view override returns (uint) {
         return allStakes.length;
@@ -38,15 +29,5 @@ contract RainbowFactory is IRainbowFactory {
         getStake[token0] = stake;
         allStakes.push(stake);
         emit StakeCreated(token0, stake, allStakes.length);
-    }
-
-    function setFeeTo(address _feeTo) external override {
-        require(msg.sender == feeToSetter, 'RainbowFactory: FORBIDDEN');
-        feeTo = _feeTo;
-    }
-
-    function setFeeToSetter(address _feeToSetter) external override {
-        require(msg.sender == feeToSetter, 'RainbowFactory: FORBIDDEN');
-        feeToSetter = _feeToSetter;
     }
 }

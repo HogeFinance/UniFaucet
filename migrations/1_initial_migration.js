@@ -8,7 +8,7 @@ const RainbowERC20   = artifacts.require("RainbowERC20");
 module.exports = function (deployer, network, accounts) {
   deployer.deploy(Migrations);
   deployer.deploy(Token, "TestToken", "TT373");
-  deployer.deploy(RainbowFactory, accounts[0]).then(() =>
+  deployer.deploy(RainbowFactory).then(() =>
       // Subtitute init code into RainbowLibrary for router
       deployer.deploy(UniFaucet, RainbowFactory.address, accounts[1], "10000000000000000")
   );
