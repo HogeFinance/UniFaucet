@@ -2,14 +2,10 @@ import Web3 from 'web3'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import styled from 'styled-components'
-import CreatableSelect from 'react-select/creatable';
-import { ActionMeta, OnChangeValue } from 'react-select';
+import CreatableSelect from 'react-select/creatable'
+import { ActionMeta, OnChangeValue } from 'react-select'
 
-import {
-  irainbowerc20,
-  irainbowfactory,
-  iunifaucet,
-} from '../contractabi'
+import { irainbowerc20, irainbowfactory, iunifaucet } from '../contractabi'
 import React, { useState, FocusEvent } from 'react'
 import { Form, Modal, Button } from 'react-bootstrap'
 
@@ -23,11 +19,14 @@ const Faucet: React.FC<{}> = () => {
   // Changes based on network
   let faucetAddr = '0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6'
   let factoryAddr = '0x1d0D97Ecc3490189762754713a23394D9337c22A'
-  const defaultToken = { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' }
-  let factoryInstance = null;
-  let stakeAddr = null;
-  let stakeInstance = null;
-  let balance = null;
+  const defaultToken = {
+    label: 'Hoge',
+    value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
+  }
+  let factoryInstance = null
+  let stakeAddr = null
+  let stakeInstance = null
+  let balance = null
 
   // Logic code
 
@@ -39,7 +38,15 @@ const Faucet: React.FC<{}> = () => {
   const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
   const [account, setAccountText] = useState(null)
   const [networkName, setNetworkNameText] = useState('')
-  let dripObject = defaultToken
+
+  // Set initial token to HOGE
+  const [selectedToken, setSelectedToken] = useState<{
+    label: string
+    value: string
+  }>({
+    label: 'Hoge',
+    value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
+  })
 
   let provider = null
   let web3: any = null
@@ -47,17 +54,18 @@ const Faucet: React.FC<{}> = () => {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const handleChange = async(newObject: OnChangeValue<any, false>) => {
-    if (newObject == null) return;
-    dripObject = newObject;
+  const handleChange = async (token: OnChangeValue<any, false>) => {
+    if (token == null) return
+    // Set selected token to new selection from dropdown
+    setSelectedToken(token)
     //need to fix, no need to call this everytime!
-    let [web3, account] = await getAccountInfo();
+    let [web3, account] = await getAccountInfo()
 
     factoryInstance = await new web3.eth.Contract(irainbowfactory, factoryAddr)
-    stakeAddr = await factoryInstance.methods.getStake(newObject.value).call()
+    stakeAddr = await factoryInstance.methods.getStake(token.value).call()
     stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
     balance = await stakeInstance.methods.balanceOf(account).call().call()
-    setOutputAmount(balance + " " + newObject.label)
+    setOutputAmount(balance + ' ' + token.label)
   }
 
   var tokenlist = [
@@ -66,21 +74,21 @@ const Faucet: React.FC<{}> = () => {
   ]
 
   const chainLookup: Record<string, string> = {
-    "1": "Ethereum Mainnet",
-    "4": "Ethereum Testnet Rinkeby",
-    "56": "Binance Smart Chain",
-    "100": "xDai Chain",
-    "137": "Polygon Mainnet",
-    "200": "Arbitrum on xDai",
-    "250": "Fantom Opera",
-    "4002": "Fantom Testnet",
-    "42161": "Arbitrum One",
-    "421611": "Arbitrum Testnet Rinkeby"
+    '1': 'Ethereum Mainnet',
+    '4': 'Ethereum Testnet Rinkeby',
+    '56': 'Binance Smart Chain',
+    '100': 'xDai Chain',
+    '137': 'Polygon Mainnet',
+    '200': 'Arbitrum on xDai',
+    '250': 'Fantom Opera',
+    '4002': 'Fantom Testnet',
+    '42161': 'Arbitrum One',
+    '421611': 'Arbitrum Testnet Rinkeby',
   }
 
   const faucetLookup: Record<string, string> = {
-    "1": "",
-    "4": "0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6"
+    '1': '',
+    '4': '0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6',
   }
 
   const providerOptions = {
@@ -131,22 +139,25 @@ const Faucet: React.FC<{}> = () => {
   const faucetDrip = async () => {
     //need to fix, no need to call this everytime!
     let [web3, account] = await getAccountInfo()
-    const dripToken = dripObject.value
+    const dripToken = selectedToken.value
 
-    if (!account || !dripToken) return;
-    const unifaucetInstance = await new web3.eth.Contract(iunifaucet, faucetAddr)
+    if (!account || !dripToken) return
+    const unifaucetInstance = await new web3.eth.Contract(
+      iunifaucet,
+      faucetAddr
+    )
 
     try {
-      const feeAmount = await unifaucetInstance.methods
-        .feeAmount.call().call(function (error: any, value: any) {
+      const feeAmount = await unifaucetInstance.methods.feeAmount
+        .call()
+        .call(function (error: any, value: any) {
           console.log(value) // Move drip inside here
         })
 
       let response = await unifaucetInstance.methods
         .drip(dripToken, account)
         .send({ from: account, value: feeAmount })
-    }
-    catch (e) {
+    } catch (e) {
       const result = (e as Error).message
       alert(result)
     }
@@ -208,12 +219,9 @@ const Faucet: React.FC<{}> = () => {
     }
   `
   const FaucetVisual = styled.img`
-  
-  @media only screen and (max-width: 768px) {
-    width: 50%;
-  }
-  
-  
+    @media only screen and (max-width: 768px) {
+      width: 50%;
+    }
   `
   const FaucetBottom = styled.div``
   const CollectionArea = styled.div`
@@ -225,7 +233,7 @@ const Faucet: React.FC<{}> = () => {
     width: min-content;
     margin-left: 250px;
     @media only screen and (max-width: 768px) {
-     margin-left: 0px;
+      margin-left: 0px;
     }
   `
   const OutputValue = styled.input`
@@ -288,7 +296,11 @@ const Faucet: React.FC<{}> = () => {
 
   return (
     <Wrapper>
-      <Header connectVariantColor={connectVariantColor} connectButtonText={connectButtonText} connectWallet={getAccountInfo} />
+      <Header
+        connectVariantColor={connectVariantColor}
+        connectButtonText={connectButtonText}
+        connectWallet={getAccountInfo}
+      />
       <Heading>
         <Title>[UniFaucet]</Title>
         <SubTitle>A faucet for reflect tokens </SubTitle>
@@ -307,6 +319,7 @@ const Faucet: React.FC<{}> = () => {
               <CreatableSelect
                 isClearable
                 onChange={handleChange}
+                value={selectedToken}
                 options={tokenlist}
               />
             </Form.Group>
@@ -325,7 +338,11 @@ const Faucet: React.FC<{}> = () => {
           </CollectionArea>
         </FaucetBottom>
       </FaucetSection>
-      <a href="https://github.com/HogeFinance/UniFaucet" target="_blank" rel="noreferrer">
+      <a
+        href="https://github.com/HogeFinance/UniFaucet"
+        target="_blank"
+        rel="noreferrer"
+      >
         <PoweredBy src={poweredBy} />
       </a>
       <StakeModal
@@ -339,45 +356,3 @@ const Faucet: React.FC<{}> = () => {
 }
 
 export default Faucet
-
-// eslint-disable-next-line no-lone-blocks
-{
-  /* <div className="row">
-        <div className="col-sm-4 offset-sm-4">
-          <Form>
-            <Form.Group className="mb-3" controlId="formSelect">
-              <Form.Control
-                className="form-select token-btn"
-                as="select"
-                aria-label="Default select example"
-              >
-                <option>Token</option>
-                <option value="1">Hoge</option>
-              </Form.Control>
-            </Form.Group>
-          </Form>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-sm-4">
-          <Button
-            variant="primary"
-            onClick={handleShow}
-            className="position-absolute top-50"
-          >
-            Stake &gt;&gt;
-          </Button>
-        </div>
-        <div className="col-sm-4">
-          <img src={faucetlogo} alt="Logo" />
-        </div>
-      </div>
-      <div className="collect-btn">
-        <span>
-          <span id="tokenamount">6,000,000,000 HOGE</span>
-          <Button variant="success" className="mx-2" onClick={faucetDrip}>
-            &lt;&lt; Collect{" "}
-          </Button>
-        </span>
-      </div> */
-}
