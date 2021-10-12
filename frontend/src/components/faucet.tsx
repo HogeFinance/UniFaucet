@@ -35,7 +35,6 @@ const Faucet: React.FC<{}> = () => {
   const [outputAmount, setOutputAmount] = useState('10.000.000 HOGE')
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
   const [connectButtonText, setConnectButtonText] = useState('Not Connected')
-  const [showNetworkWarning, setShowNetworkWarning] = useState(false) // Control if wrong network warning is displayed
   const [account, setAccountText] = useState(null)
   const [networkName, setNetworkNameText] = useState('')
 
@@ -61,15 +60,24 @@ const Faucet: React.FC<{}> = () => {
     //need to fix, no need to call this everytime!
     let [web3, account] = await getAccountInfo()
 
-    factoryInstance = await new web3.eth.Contract(irainbowfactory, factoryAddr)
-    stakeAddr = await factoryInstance.methods.getStake(token.value).call()
-    stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
-    balance = await stakeInstance.methods.balanceOf(account).call().call()
-    setOutputAmount(balance + ' ' + token.label)
+    try {
+      factoryInstance = await new web3.eth.Contract(
+        irainbowfactory,
+        factoryAddr
+      )
+      stakeAddr = await factoryInstance.methods.getStake(token.value).call()
+      stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
+      balance = await stakeInstance.methods.balanceOf(account).call()
+      setOutputAmount(balance + ' ' + token.label)
+    } catch (e) {
+      const result = (e as Error).message
+      alert(result)
+      setOutputAmount('0.00')
+    }
   }
 
   var tokenlist = [
-    { label: 'TestToken', value: '0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102' },
+    { label: 'TestToken', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' },
     { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
   ]
 
@@ -304,12 +312,9 @@ const Faucet: React.FC<{}> = () => {
       <Heading>
         <Title>[UniFaucet]</Title>
         <SubTitle>A faucet for reflect tokens </SubTitle>
-        <SubTitle>Connected Network: {networkName}</SubTitle>
-        {showNetworkWarning && (
-          <WarnMessage>
-            [ You are currently using an unsupported network. ]
-          </WarnMessage>
-        )}
+        <br />
+        <br />
+        <SubTitle>{networkName}</SubTitle>
       </Heading>
 
       <FaucetSection>
