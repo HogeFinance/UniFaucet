@@ -60,7 +60,7 @@ contract UniFaucet is IUniFaucet {
 
     function getAvailableSpend(address token) public view override returns (uint spend) {
         address stake = IRainbowFactory(factory).getStake(token);
-        require(stake != address(0), "UniFaucet: STAKE_DOES_NOT_EXIST")
+        require(stake != address(0), "UniFaucet: STAKE_DOES_NOT_EXIST");
 
         uint _totalSupply = IERC20(token).balanceOf(stake);
         uint _reserves = IRainbowStake(stake).getReserve();

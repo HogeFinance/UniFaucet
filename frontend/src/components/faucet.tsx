@@ -170,10 +170,10 @@ const Faucet: React.FC<{}> = () => {
   // Component styles (These could also be imported from an external file if this one gets too bloated.)
 
   const Wrapper = styled.div`
-    margin-top: 50px;
   `
+
   const Heading = styled.div`
-    margin: 0 0 70px;
+    margin: 40px 0 40px;
   `
 
   const Title = styled.h1`
@@ -310,7 +310,7 @@ const Faucet: React.FC<{}> = () => {
         <SubTitle>A faucet for reflect tokens </SubTitle>
         <br />
         <br />
-        <SubTitle>{networkName}</SubTitle>
+        <SubTitle>&nbsp;{networkName}</SubTitle>
       </Heading>
 
       <FaucetSection>

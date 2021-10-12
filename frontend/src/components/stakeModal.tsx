@@ -1,7 +1,7 @@
 import { Button, Modal } from 'react-bootstrap'
 import React, {FocusEvent, useState} from 'react'
 import styled, { withTheme } from 'styled-components'
-import {iunifaucet, standardtoken} from "../contractabi";
+import {iunifaucet, standardtoken, irainbowerc20, irainbowfactory} from "../contractabi";
 
 interface Props {
   showModal: boolean
@@ -83,6 +83,22 @@ const StakeModal: React.FC<Props> = ({
     }
   }
 
+  const approveWithdrawal = async () => {
+    let [web3, account] = await getAccountInfo()
+    let factoryInstance = await new web3.eth.Contract(irainbowfactory, "0x554cCABB6f22a2B48c52E52f1C55882664beA600")
+    try {
+      let stakeAddr = await factoryInstance.methods.getStake(tokenAddress).call()
+      let stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
+      let response = await stakeInstance.methods
+          .approve(faucetAddr, liquidityAddAmt)
+          .send({from: account})
+    }
+    catch(e) {
+      const result = (e as Error).message
+      alert(result)
+    }
+  }
+
   const faucetRemoveLiquidity = async () => {
     let [web3, account] = await getAccountInfo()
     let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
@@ -137,6 +153,9 @@ const StakeModal: React.FC<Props> = ({
         </InputsContainer>
       </Modal.Body>
       <Modal.Footer>
+        <Button variant="danger" onClick={approveWithdrawal}>
+          Approve Withdrawal
+        </Button>
         <Button variant="danger" onClick={faucetRemoveLiquidity}>
           Remove Liquidity
         </Button>
