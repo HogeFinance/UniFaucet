@@ -18,7 +18,7 @@ contract RainbowFactory is IRainbowFactory {
     function createStake(address token0) external override returns (address stake) {
         require(token0 != address(0), 'RainbowFactory: ZERO_ADDRESS');
 
-        require(getStake[token0] == address(0), 'UniswapV2: STAKE_EXISTS'); // single check is sufficient
+        require(getStake[token0] == address(0), 'UniFaucet: STAKE_ALREADY_EXISTS'); // single check is sufficient
 
         bytes memory bytecode = type(RainbowStake).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0));

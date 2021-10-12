@@ -17,20 +17,15 @@ import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
   // Changes based on network
-  let faucetAddr = '0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6'
-  let factoryAddr = '0x1d0D97Ecc3490189762754713a23394D9337c22A'
+  let faucetAddr = '0xaC76c5624Acc480DD9B184a39839871f8f6591a0'
   const defaultToken = {
     label: 'Hoge',
     value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
   }
-  let factoryInstance = null
-  let stakeAddr = null
-  let stakeInstance = null
+
   let balance = null
 
   // Logic code
-
-  //Need to fix this or we're going to get laughed at for brainlet code
   const [showModal, setShow] = useState(false)
   const [outputAmount, setOutputAmount] = useState('10.000.000 HOGE')
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
@@ -45,10 +40,7 @@ const Faucet: React.FC<{}> = () => {
         value: string
       }
     | undefined
-  >({
-    label: 'Hoge',
-    value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
-  })
+  >(defaultToken)
 
   let provider = null
   let web3: any = null
@@ -71,14 +63,12 @@ const Faucet: React.FC<{}> = () => {
     let [web3, account] = await getAccountInfo()
 
     try {
-      factoryInstance = await new web3.eth.Contract(
-        irainbowfactory,
-        factoryAddr
+      const unifaucetInstance = await new web3.eth.Contract(
+          iunifaucet,
+          faucetAddr
       )
-      stakeAddr = await factoryInstance.methods.getStake(token?.value).call()
-      stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
-      balance = await stakeInstance.methods.balanceOf(account).call()
-      setOutputAmount(balance + ' ' + token?.label)
+      balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
+      setOutputAmount(Math.floor(parseFloat(balance) * 0.01) + ' ' + token?.label)
     } catch (e) {
       const result = (e as Error).message
       alert(result)
@@ -102,11 +92,6 @@ const Faucet: React.FC<{}> = () => {
     '4002': 'Fantom Testnet',
     '42161': 'Arbitrum One',
     '421611': 'Arbitrum Testnet Rinkeby',
-  }
-
-  const faucetLookup: Record<string, string> = {
-    '1': '',
-    '4': '0xEcdf24535F0b57FfBD62c7c506672E0d76AEE9C6',
   }
 
   const providerOptions = {
@@ -166,6 +151,7 @@ const Faucet: React.FC<{}> = () => {
     )
 
     try {
+      debugger
       const feeAmount = await unifaucetInstance.methods.feeAmount
         .call()
         .call(function (error: any, value: any) {
