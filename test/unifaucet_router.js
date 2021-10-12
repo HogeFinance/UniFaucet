@@ -138,11 +138,16 @@ contract("UniFaucet", function (accounts) {
     // Mint "reflection" to stake address
     await token.mint(stake, 100);
 
+    // Have correct available balance
+    let balance = await faucet.getAvailableSpend(token.address);
+    let bal = await balance.toNumber();
+    assert.equal(bal, 100);
+
     // Pay out to another address
     await faucet.drip(token.address, accounts[1], {value: 10000000000000000});
 
-    let balance = await token.balanceOf(accounts[1]);
-    let bal = await balance.toNumber();
+    balance = await token.balanceOf(accounts[1]);
+    bal = await balance.toNumber();
     assert.equal(bal, 1);
 
     // Stake reserve is correct

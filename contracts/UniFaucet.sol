@@ -57,4 +57,11 @@ contract UniFaucet is IUniFaucet {
         IRainbowStake(stake).drip(to, amount);
         TransferHelper.safeTransferETH(feeTo, msg.value);
     }
+
+    function getAvailableSpend(address token) public view override returns (uint spend) {
+        address stake = IRainbowFactory(factory).getStake(token);
+        uint _totalSupply = IERC20(token).balanceOf(stake);
+        uint _reserves = IRainbowStake(stake).getReserve();
+        spend = _totalSupply.sub(_reserves);
+    }
 }
