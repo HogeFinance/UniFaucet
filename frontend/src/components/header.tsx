@@ -6,7 +6,6 @@ const Header: React.FC<{ connectVariantColor: string, connectButtonText: string,
 
   const buttonStyle = {
     "marginLeft": 'auto',
-    "marginRight": 'auto',
   };
 
   return (

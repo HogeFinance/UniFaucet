@@ -99,8 +99,8 @@ const StakeModal: React.FC<Props> = ({
   }
 
   return (
-    <Modal show={showModal} onHide={handleClose}>
-      <Modal.Header>
+    <Modal show={showModal} onHide={handleClose} centered>
+      <Modal.Header closeButton >
         <Modal.Title>Stake Tokens</Modal.Title>
       </Modal.Header>
       <Modal.Body>
