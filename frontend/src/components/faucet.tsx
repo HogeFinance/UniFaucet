@@ -39,10 +39,13 @@ const Faucet: React.FC<{}> = () => {
   const [networkName, setNetworkNameText] = useState('')
 
   // Set initial token to HOGE
-  const [selectedToken, setSelectedToken] = useState<{
-    label: string
-    value: string
-  }>({
+  const [selectedToken, setSelectedToken] = useState<
+    | {
+        label: string
+        value: string
+      }
+    | undefined
+  >({
     label: 'Hoge',
     value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
   })
@@ -53,10 +56,17 @@ const Faucet: React.FC<{}> = () => {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const handleChange = async (token: OnChangeValue<any, false>) => {
-    if (token == null) return
-    // Set selected token to new selection from dropdown
-    setSelectedToken(token)
+  const handleChange = async (
+    token: { label: string; value: string } | null,
+    actionMeta: ActionMeta<unknown>
+  ) => {
+    if (actionMeta.action === 'clear') {
+      setSelectedToken(undefined)
+      return
+    } else if (token) {
+      // Set selected token to new selection from dropdown
+      setSelectedToken(token)
+    }
     //need to fix, no need to call this everytime!
     let [web3, account] = await getAccountInfo()
 
@@ -65,10 +75,10 @@ const Faucet: React.FC<{}> = () => {
         irainbowfactory,
         factoryAddr
       )
-      stakeAddr = await factoryInstance.methods.getStake(token.value).call()
+      stakeAddr = await factoryInstance.methods.getStake(token?.value).call()
       stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
       balance = await stakeInstance.methods.balanceOf(account).call()
-      setOutputAmount(balance + ' ' + token.label)
+      setOutputAmount(balance + ' ' + token?.label)
     } catch (e) {
       const result = (e as Error).message
       alert(result)
@@ -147,7 +157,7 @@ const Faucet: React.FC<{}> = () => {
   const faucetDrip = async () => {
     //need to fix, no need to call this everytime!
     let [web3, account] = await getAccountInfo()
-    const dripToken = selectedToken.value
+    const dripToken = selectedToken?.value
 
     if (!account || !dripToken) return
     const unifaucetInstance = await new web3.eth.Contract(
