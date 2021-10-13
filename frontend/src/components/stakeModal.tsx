@@ -44,6 +44,8 @@ const StakeModal: React.FC<Props> = ({
 }) => {
   const [tokenAddress, setTokenAddress] = useState('')
   const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
+  const [approvalButtonAdd, setApprovalButtonAdd] = useState('Approve')
+  const [approvalButtonRemove, setApprovalButtomRem] = useState('Approve Liquidity Withdrawal')
 
   const handleTokenChange = (e: FocusEvent<HTMLInputElement>) =>
     setTokenAddress(e.target.value)
@@ -76,6 +78,10 @@ const StakeModal: React.FC<Props> = ({
       let response = await standardTokenInstance.methods
           .approve(faucetAddr, liquidityAddAmt)
           .send({from: account})
+
+          if(response.status == true){
+            setApprovalButtonAdd('Approved!')
+          }
     }
     catch(e) {
       const result = (e as Error).message
@@ -92,6 +98,10 @@ const StakeModal: React.FC<Props> = ({
       let response = await stakeInstance.methods
           .approve(faucetAddr, liquidityAddAmt)
           .send({from: account})
+
+          if(response.status == true){
+          setApprovalButtomRem('Approved!')
+          }
     }
     catch(e) {
       const result = (e as Error).message
@@ -107,6 +117,7 @@ const StakeModal: React.FC<Props> = ({
       let response = await unifaucetInstance.methods
           .removeLiquidity(tokenAddress, liquidityAddAmt, account)
           .send({from: account})
+
     }
     catch(e) {
       const result = (e as Error).message
@@ -117,7 +128,7 @@ const StakeModal: React.FC<Props> = ({
   return (
     <Modal show={showModal} onHide={handleClose} centered>
       <Modal.Header closeButton >
-        <Modal.Title>Stake Tokens</Modal.Title>
+        <Modal.Title>Stake/Unstake Tokens</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <InputsContainer>
@@ -152,18 +163,22 @@ const StakeModal: React.FC<Props> = ({
           </Inputs>
         </InputsContainer>
       </Modal.Body>
+      <div>Stake Liquidity (Approve first!)</div>
       <Modal.Footer>
-        <Button variant="danger" onClick={approveWithdrawal}>
-          Approve Withdrawal
-        </Button>
-        <Button variant="danger" onClick={faucetRemoveLiquidity}>
-          Remove Liquidity
-        </Button>
         <Button variant="secondary" onClick={approve}>
-          Approve
+        {approvalButtonAdd}
         </Button>
         <Button variant="primary" onClick={faucetAddLiquidity}>
           Add Liquidity
+        </Button>
+      </Modal.Footer>
+      <div>Remove Liquidity (Approve first!)</div>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={approveWithdrawal}>
+          {approvalButtonRemove}
+        </Button>
+        <Button variant="danger" onClick={faucetRemoveLiquidity}>
+          Remove Liquidity
         </Button>
       </Modal.Footer>
     </Modal>

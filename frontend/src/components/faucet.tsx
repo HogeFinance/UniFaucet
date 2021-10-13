@@ -151,7 +151,6 @@ const Faucet: React.FC<{}> = () => {
     )
 
     try {
-      debugger
       const feeAmount = await unifaucetInstance.methods.feeAmount
         .call()
         .call(function (error: any, value: any) {
@@ -284,9 +283,8 @@ const Faucet: React.FC<{}> = () => {
   `
 
   const PoweredBy = styled.img`
-    position: absolute;
-    bottom: 10px;
-    right: 20px;
+    margin-top: 1em;
+    float: right;
   `
 
   const WarnMessage = styled.span`
