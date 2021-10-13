@@ -45,7 +45,7 @@ contract UniFaucet is IUniFaucet {
     function removeLiquidity(address tokenA, uint liquidity, address to) public override returns (uint amountA) {
         address stake = IRainbowFactory(factory).getStake(tokenA);
 
-        RainbowStake(stake).transferFrom(msg.sender, stake, liquidity); // send liquidity to pair
+        RainbowStake(stake).transferFrom(msg.sender, stake, liquidity); // send liquidity to pair for burning
         amountA = RainbowStake(stake).burn(to);
     }
 

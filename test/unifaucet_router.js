@@ -108,17 +108,11 @@ contract("UniFaucet", function (accounts) {
     let faucet = await UniFaucet.deployed();
     let factory = await RainbowFactory.deployed();
     let stake = await factory.getStake(token.address);
-    let stakeContract = await RainbowERC20.at(stake);
 
     // Add more liquidity
     await token.mint(accounts[0], 3);
     await token.approve(faucet.address, 3);
     await faucet.addLiquidity(token.address, 3, accounts[0]);
-
-    // Stake has tokens
-    // let balance = await token.balanceOf(stake);
-    // let bal     = await balance.toNumber();
-    // assert.equal(bal, 248);
 
     // Has correct Reserve
     let rainbowStakeInstance = await RainbowStake.at(stake);
@@ -156,4 +150,19 @@ contract("UniFaucet", function (accounts) {
     bal = await balance.toNumber();
     assert.equal(bal, 103);
   });
+
+  it("should return correct liquidity on remove after reflection", async function() {
+    let token = await TestToken.deployed();
+    let faucet = await UniFaucet.deployed();
+    let factory = await RainbowFactory.deployed();
+    let stake = await factory.getStake(token.address);
+    let stakeContract = await RainbowERC20.at(stake);
+
+    await stakeContract.approve(faucet.address, 10);
+    await faucet.removeLiquidity(token.address, 10, accounts[0]);
+
+    let balance = await token.balanceOf(stake);
+    let bal = await balance.toNumber()
+    assert.equal(bal, 192)
+  })
 });

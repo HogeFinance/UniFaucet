@@ -26,5 +26,9 @@ by adding a small amount of liquidity, then tokens can be sent directly to the `
 ```
 * The current amount of reserved liquidity can be checked via the `RainbowStake` class.
 ```
-  function getReserve() public view override returns (uint _reserve0);
+ function getReserve() public view override returns (uint _reserve0);
+```
+* Collection happens via `drip()`
+```
+ function drip(address token, address to) payable external returns (uint amount);
 ```

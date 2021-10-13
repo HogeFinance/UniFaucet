@@ -70,19 +70,16 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
     // this low-level function should be called from a contract which performs important safety checks
     function burn(address to) external lock override returns (uint amount0) {
         require(getReserve() > 0, 'UniFaucet: CANNOT_BURN_NO_LIQUIDITY');
-        address _token0   = token0;
-        uint _balance0    = IERC20(_token0).balanceOf(address(this)); // Of Tokens
-        uint _totalSupply = getReserve();          // Of Liquidity
-        uint liquidity    = balanceOf[address(this)]; // Num LP Tokens
-        amount0           = liquidity.mul(_balance0) / _totalSupply; // Share of Tokens including reflection
-        require(_balance0 > 0, 'UniFaucet: INSUFFICIENT_LIQUIDITY_BURNED');
+        address _token = token0;
+        uint liquidity = balanceOf[address(this)]; // Num LP Tokens
+        require(liquidity > 0, 'UniFaucet: INSUFFICIENT_LIQUIDITY_BURNED');
 
         _burn(address(this), liquidity);
-        _safeTransfer(_token0, to, amount0);
+        _safeTransfer(_token, to, liquidity);
 
         uint _reserve = getReserve();
         _update(_reserve.sub(liquidity));
-        emit Burn(msg.sender, amount0, to);
+        emit Burn(msg.sender, liquidity, to);
     }
 
     function drip(address to, uint amount) external override {
