@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import CreatableSelect from 'react-select/creatable'
 import { ActionMeta, OnChangeValue } from 'react-select'
 
-import { irainbowerc20, irainbowfactory, iunifaucet } from '../contractabi'
+import { standardtoken, iunifaucet } from '../contractabi'
 import React, { useState, FocusEvent } from 'react'
 import { Form, Modal, Button } from 'react-bootstrap'
 
@@ -19,7 +19,7 @@ const Faucet: React.FC<{}> = () => {
   // Changes based on network
   let faucetAddr = '0xaC76c5624Acc480DD9B184a39839871f8f6591a0'
   const defaultToken = {
-    label: 'Hoge',
+    label: '0xfad45e47083e4607302aa43c65fb3106f1cd7607 HOGE',
     value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
   }
 
@@ -67,8 +67,14 @@ const Faucet: React.FC<{}> = () => {
           iunifaucet,
           faucetAddr
       )
+
+      const tokenInterface = await new web3.eth.Contract(
+          standardtoken,
+          token?.value
+      )
       balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
-      setOutputAmount(Math.floor(parseFloat(balance) * 0.01) + ' ' + token?.label)
+      const tokenSymbol = await tokenInterface.methods.symbol().call()
+      setOutputAmount(Math.floor(parseFloat(balance) * 0.01) + ' ' + tokenSymbol)
     } catch (e) {
       const result = (e as Error).message
       alert(result)
@@ -77,8 +83,7 @@ const Faucet: React.FC<{}> = () => {
   }
 
   var tokenlist = [
-    { label: 'TestToken', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' },
-    { label: 'Hoge', value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607' },
+    { label: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9 TT357', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' }
   ]
 
   const chainLookup: Record<string, string> = {

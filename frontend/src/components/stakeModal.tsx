@@ -15,13 +15,25 @@ const InputsContainer = styled.div`
   grid-template-columns: 0.5fr 1fr;
   grid-template-rows: auto;
   gap: 25px 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Maven Pro', sans-serif;
 `
-const Labels = styled.div``
+const Labels = styled.div`
+  font-family: 'Maven Pro', sans-serif;
+`
 const Label = styled.div`
+  font-family: 'Maven Pro', sans-serif;
   display: flex;
-  align-items: center;
+  align-items: right;
   margin-bottom: 5px;
+  margin-top: 5px;
+  height: 30px;
+`
+const LabelAmount = styled.div`
+  font-family: 'Maven Pro', sans-serif;
+  display: flex;
+  align-items: right;
+  margin-bottom: 5px;
+  margin-top: 15px;
   height: 30px;
 `
 const Inputs = styled.div``
@@ -42,10 +54,11 @@ const StakeModal: React.FC<Props> = ({
   getAccountInfo,
   faucetAddr
 }) => {
+  const factoryAddr = "0x554cCABB6f22a2B48c52E52f1C55882664beA600"
   const [tokenAddress, setTokenAddress] = useState('')
   const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
   const [approvalButtonAdd, setApprovalButtonAdd] = useState('Approve')
-  const [approvalButtonRemove, setApprovalButtomRem] = useState('Approve Liquidity Withdrawal')
+  const [approvalButtonRemove, setApprovalButtomRem] = useState('Approve')
 
   const handleTokenChange = (e: FocusEvent<HTMLInputElement>) =>
     setTokenAddress(e.target.value)
@@ -91,7 +104,7 @@ const StakeModal: React.FC<Props> = ({
 
   const approveWithdrawal = async () => {
     let [web3, account] = await getAccountInfo()
-    let factoryInstance = await new web3.eth.Contract(irainbowfactory, "0x554cCABB6f22a2B48c52E52f1C55882664beA600")
+    let factoryInstance = await new web3.eth.Contract(irainbowfactory, factoryAddr)
     try {
       let stakeAddr = await factoryInstance.methods.getStake(tokenAddress).call()
       let stakeInstance = await new web3.eth.Contract(irainbowerc20, stakeAddr)
@@ -100,7 +113,7 @@ const StakeModal: React.FC<Props> = ({
           .send({from: account})
 
           if(response.status == true){
-          setApprovalButtomRem('Approved!')
+            setApprovalButtomRem('Approved!')
           }
     }
     catch(e) {
@@ -134,7 +147,7 @@ const StakeModal: React.FC<Props> = ({
         <InputsContainer>
           <Labels>
             <Label>Token Address:</Label>
-            <Label>Amount:</Label>
+            <LabelAmount>Amount:</LabelAmount>
           </Labels>
           <Inputs>
             <InputWrapper>
@@ -145,12 +158,6 @@ const StakeModal: React.FC<Props> = ({
                   list="verifiedtokens"
                   onBlur={handleTokenChange}
               ></input>
-              <datalist id="verifiedtokens">
-                <option value="0x0">HOGE</option>
-                <option value="0x15cEd5c972E6960A6e6A6B2B8BAB10C21fa6a102">
-                  Test Token
-                </option>
-              </datalist>
             </InputWrapper>
             <InputWrapper>
               <input
@@ -163,7 +170,7 @@ const StakeModal: React.FC<Props> = ({
           </Inputs>
         </InputsContainer>
       </Modal.Body>
-      <div>Stake Liquidity (Approve first!)</div>
+      <div>Add</div>
       <Modal.Footer>
         <Button variant="secondary" onClick={approve}>
         {approvalButtonAdd}
@@ -172,7 +179,7 @@ const StakeModal: React.FC<Props> = ({
           Add Liquidity
         </Button>
       </Modal.Footer>
-      <div>Remove Liquidity (Approve first!)</div>
+      <div>Remove</div>
       <Modal.Footer>
         <Button variant="secondary" onClick={approveWithdrawal}>
           {approvalButtonRemove}
