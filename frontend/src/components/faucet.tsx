@@ -116,18 +116,20 @@ const Faucet: React.FC<{}> = () => {
         description: 'Scan qrcode with your mobile wallet',
       },
       package: WalletConnectProvider,
-      rpc: {
-        1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-        3: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-        4: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-        56: "https://bsc-dataseed.binance.org/",
-        100: "https://rpc.xdaichain.com/",
-        137: "https://polygon-rpc.com/",
-        200: 'Arbitrum on xDai',
-        250: "https://rpc.ftm.tools/",
-        4002: 'Fantom Testnet',
-        42161: 'Arbitrum One',
-        421611: 'Arbitrum Testnet Rinkeby',
+      options: {
+        rpc: {
+          1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+          3: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+          4: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+          56: "https://bsc-dataseed.binance.org/",
+          100: "https://rpc.xdaichain.com/",
+          137: "https://polygon-rpc.com/",
+          200: 'Arbitrum on xDai',
+          250: "https://rpc.ftm.tools/",
+          4002: 'Fantom Testnet',
+          42161: 'Arbitrum One',
+          421611: 'Arbitrum Testnet Rinkeby',
+        },
       },
     },
   }
@@ -341,7 +343,7 @@ const Faucet: React.FC<{}> = () => {
           <Form>
             <Form.Group className="mb-3" controlId="formSelect">
               <CreatableSelect
-                className = "formatSelect"
+                className="formatSelect"
                 isClearable
                 onChange={handleChange}
                 value={selectedToken}
