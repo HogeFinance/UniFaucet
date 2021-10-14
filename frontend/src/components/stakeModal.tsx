@@ -1,6 +1,6 @@
 import { Button, Modal } from 'react-bootstrap'
 import React, {FocusEvent, useState} from 'react'
-import styled, { withTheme } from 'styled-components'
+import styled from 'styled-components'
 import {iunifaucet, standardtoken, irainbowerc20, irainbowfactory} from "../contractabi";
 
 interface Props {
@@ -43,10 +43,6 @@ const InputWrapper = styled.div`
     width: 100%;
   }
 `
-
-const ModalBackground = {
- 
-};
 
 const StakeModal: React.FC<Props> = ({
   showModal,
@@ -92,7 +88,7 @@ const StakeModal: React.FC<Props> = ({
           .approve(faucetAddr, liquidityAddAmt)
           .send({from: account})
 
-          if(response.status == true){
+          if(response.status === true){
             setApprovalButtonAdd('Approved!')
           }
     }
@@ -112,7 +108,7 @@ const StakeModal: React.FC<Props> = ({
           .approve(faucetAddr, liquidityAddAmt)
           .send({from: account})
 
-          if(response.status == true){
+          if(response.status === true){
             setApprovalButtomRem('Approved!')
           }
     }

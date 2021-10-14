@@ -144,3 +144,12 @@ h2, h3 {
  color: white !important;
  font-size: 1.5em !important;
 }
+
+
+@media only screen and (max-width: 768px) {
+  .formatSelect{
+    
+      font-size: 0.8em !important;
+  }
+  
+}

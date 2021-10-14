@@ -1,5 +1,5 @@
 import React, {MouseEventHandler} from "react";
-import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Button, Container, Navbar } from "react-bootstrap";
 
 const Header: React.FC<{ connectVariantColor: string, connectButtonText: string, connectWallet: MouseEventHandler<HTMLElement> }> = ({ connectVariantColor, connectButtonText, connectWallet }) => {
 

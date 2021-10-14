@@ -3,11 +3,11 @@ import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import styled from 'styled-components'
 import CreatableSelect from 'react-select/creatable'
-import { ActionMeta, OnChangeValue } from 'react-select'
+import { ActionMeta } from 'react-select'
 
 import { standardtoken, iunifaucet } from '../contractabi'
-import React, { useState, FocusEvent } from 'react'
-import { Form, Modal, Button } from 'react-bootstrap'
+import React, { useMemo, useState } from 'react'
+import { Form } from 'react-bootstrap'
 
 import faucetlogo from '../img/faucet.png'
 import stakeButton from '../img/stake_btn.svg'
@@ -36,9 +36,9 @@ const Faucet: React.FC<{}> = () => {
   // Set initial token to HOGE
   const [selectedToken, setSelectedToken] = useState<
     | {
-        label: string
-        value: string
-      }
+      label: string
+      value: string
+    }
     | undefined
   >(defaultToken)
 
@@ -64,13 +64,13 @@ const Faucet: React.FC<{}> = () => {
 
     try {
       const unifaucetInstance = await new web3.eth.Contract(
-          iunifaucet,
-          faucetAddr
+        iunifaucet,
+        faucetAddr
       )
 
       const tokenInterface = await new web3.eth.Contract(
-          standardtoken,
-          token?.value
+        standardtoken,
+        token?.value
       )
       balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
       const tokenSymbol = await tokenInterface.methods.symbol().call()
@@ -116,8 +116,18 @@ const Faucet: React.FC<{}> = () => {
         description: 'Scan qrcode with your mobile wallet',
       },
       package: WalletConnectProvider,
-      options: {
-        infuraId: 'TEST', // required
+      rpc: {
+        1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+        3: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+        4: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+        56: "https://bsc-dataseed.binance.org/",
+        100: "https://rpc.xdaichain.com/",
+        137: "https://polygon-rpc.com/",
+        200: 'Arbitrum on xDai',
+        250: "https://rpc.ftm.tools/",
+        4002: 'Fantom Testnet',
+        42161: 'Arbitrum One',
+        421611: 'Arbitrum Testnet Rinkeby',
       },
     },
   }
@@ -207,7 +217,7 @@ const Faucet: React.FC<{}> = () => {
   `
 
   const FaucetTop = styled.div`
-    max-width: 320px;
+    max-width: 600px;
     width: 100%;
     .form-group {
       margin: 0 !important;
@@ -288,8 +298,17 @@ const Faucet: React.FC<{}> = () => {
   `
 
   const PoweredBy = styled.img`
-    margin-top: 1em;
-    float: right;
+    position: absolute;
+
+    right: 20px;
+
+    bottom: 10px;
+   
+    @media only screen and (max-width: 1024px) {
+      position: relative;
+      margin-top: 2em;
+      float: right;
+    }
   `
 
   const WarnMessage = styled.span`
@@ -299,6 +318,7 @@ const Faucet: React.FC<{}> = () => {
     margin-top: 30px;
     font-size: 22px;
   `
+
   // Render
 
   return (
@@ -321,6 +341,7 @@ const Faucet: React.FC<{}> = () => {
           <Form>
             <Form.Group className="mb-3" controlId="formSelect">
               <CreatableSelect
+                className = "formatSelect"
                 isClearable
                 onChange={handleChange}
                 value={selectedToken}
