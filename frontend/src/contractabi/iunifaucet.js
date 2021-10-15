@@ -1,7 +1,54 @@
 export const iunifaucet = [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_feeTo",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_feeAmount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "inputs": [],
     "name": "factory",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeTo",
     "outputs": [
       {
         "internalType": "address",
@@ -21,7 +68,7 @@ export const iunifaucet = [
       },
       {
         "internalType": "uint256",
-        "name": "amountADesired",
+        "name": "amountA",
         "type": "uint256"
       },
       {
@@ -132,4 +179,4 @@ export const iunifaucet = [
     "stateMutability": "nonpayable",
     "type": "function"
   }
-]
+];

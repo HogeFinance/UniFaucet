@@ -23,65 +23,6 @@ const Faucet: React.FC<{}> = () => {
     value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
   }
 
-  let balance = null
-
-  // Logic code
-  const [showModal, setShow] = useState(false)
-  const [outputAmount, setOutputAmount] = useState('10.000.000 HOGE')
-  const [connectVariantColor, setConnectVariantColor] = useState('danger')
-  const [connectButtonText, setConnectButtonText] = useState('Not Connected')
-  const [account, setAccountText] = useState(null)
-  const [networkName, setNetworkNameText] = useState('')
-  const [blinker_class, setBlinker] = useState('blink_me')
-
-  // Set initial token to HOGE
-  const [selectedToken, setSelectedToken] = useState<
-    | {
-      label: string
-      value: string
-    }
-    | undefined
-  >(defaultToken)
-
-  let provider = null
-  let web3: any = null
-
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
-
-  const handleChange = async (
-    token: { label: string; value: string } | null,
-    actionMeta: ActionMeta<unknown>
-  ) => {
-    if (actionMeta.action === 'clear') {
-      setSelectedToken(undefined)
-      return
-    } else if (token) {
-      // Set selected token to new selection from dropdown
-      setSelectedToken(token)
-    }
-    //need to fix, no need to call this everytime!
-    let [web3, account] = await getAccountInfo()
-
-    try {
-      const unifaucetInstance = await new web3.eth.Contract(
-        iunifaucet,
-        faucetAddr
-      )
-
-      const tokenInterface = await new web3.eth.Contract(
-        standardtoken,
-        token?.value
-      )
-      balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
-      const tokenSymbol = await tokenInterface.methods.symbol().call()
-      setOutputAmount(Math.floor(parseFloat(balance) * 0.01) + ' ' + tokenSymbol)
-    } catch (e) {
-      const result = (e as Error).message
-      alert(result)
-      setOutputAmount('0.00')
-    }
-  }
 
   // BSC list
   var tokenlist = [
@@ -146,6 +87,70 @@ const Faucet: React.FC<{}> = () => {
     },
   }
 
+  let balance = null
+
+  // Logic code
+  const [showModal, setShow] = useState(false)
+  const [outputAmount, setOutputAmount] = useState('((10.000.000)) HOGE')
+  const [connectVariantColor, setConnectVariantColor] = useState('danger')
+  const [connectButtonText, setConnectButtonText] = useState('Not Connected')
+  const [account, setAccountText] = useState(null)
+  const [networkName, setNetworkNameText] = useState('')
+  const [blinker_class, setBlinker] = useState('blink_me')
+
+  // Set initial token to HOGE
+  const [selectedToken, setSelectedToken] = useState<
+    | {
+      label: string
+      value: string
+    }
+    | undefined
+  >(defaultToken)
+
+  let provider = null
+  let web3: any = null
+
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  const updateDrip = async(token: { label: string; value: string }) => {
+    try {
+      const unifaucetInstance = await new web3.eth.Contract(
+          iunifaucet,
+          faucetAddr
+      )
+
+      const tokenInterface = await new web3.eth.Contract(
+          standardtoken,
+          token?.value
+      )
+      balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
+      const tokenSymbol = await tokenInterface.methods.symbol().call()
+      setOutputAmount(Math.floor(parseFloat(balance) * 0.01) + ' ' + tokenSymbol)
+    } catch (e) {
+      const result = (e as Error).message
+      alert("No Liquidity or Token Address invalid.")
+      setOutputAmount('0.00')
+    }
+  }
+
+  const handleChange = async (
+    token: { label: string; value: string } | null,
+    actionMeta: ActionMeta<unknown>
+  ) => {
+    if (actionMeta.action === 'clear') {
+      setSelectedToken(undefined)
+      return
+    } else if (token) {
+      // Set selected token to new selection from dropdown
+      setSelectedToken(token)
+    }
+    //need to fix, no need to call this everytime!
+    let [web3, account] = await getAccountInfo()
+    if (!token) token = {label: "", value: ""}
+    updateDrip(token)
+  }
+
   let web3Modal = new Web3Modal({
     cacheProvider: true, // optional
     providerOptions, // required
@@ -166,6 +171,7 @@ const Faucet: React.FC<{}> = () => {
         if (networkId == "56") {
           setNetworkNameText(chainLookup[networkId])
           setBlinker('')
+          updateDrip(defaultToken)
         } else {
           setNetworkNameText("Please use Binance Smart Chain")
         }
