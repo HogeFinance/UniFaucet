@@ -1,26 +1,5 @@
 export const iunifaucet = [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_factory",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_feeTo",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_feeAmount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "inputs": [],
     "name": "factory",
     "outputs": [
@@ -31,36 +10,7 @@ export const iunifaucet = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "feeAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [],
-    "name": "feeTo",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -71,7 +21,7 @@ export const iunifaucet = [
       },
       {
         "internalType": "uint256",
-        "name": "amountA",
+        "name": "amountADesired",
         "type": "uint256"
       },
       {
@@ -142,8 +92,7 @@ export const iunifaucet = [
       }
     ],
     "stateMutability": "payable",
-    "type": "function",
-    "payable": true
+    "type": "function"
   },
   {
     "inputs": [
@@ -162,7 +111,25 @@ export const iunifaucet = [
       }
     ],
     "stateMutability": "view",
-    "type": "function",
-    "constant": true
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "fee",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

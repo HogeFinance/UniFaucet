@@ -18,7 +18,7 @@ contract RainbowERC20 is IRainbowERC20 {
     bytes32 public constant override PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     mapping(address => uint) public override nonces;
 
-    constructor() public {
+    constructor() {
         uint chainId;
         assembly {
             chainId := chainid() // Added parens??

@@ -14,9 +14,9 @@ contract UniFaucet is IUniFaucet {
 
     address public immutable override factory;
     address public immutable feeTo; // Where to send the fees
-    uint public immutable feeAmount;
+    uint public feeAmount;
 
-    constructor(address _factory, address _feeTo, uint _feeAmount) public {
+    constructor(address _factory, address _feeTo, uint _feeAmount) {
         factory = _factory;
         feeTo   = _feeTo;
         feeAmount = _feeAmount;
@@ -65,5 +65,12 @@ contract UniFaucet is IUniFaucet {
         uint _totalSupply = IERC20(token).balanceOf(stake);
         uint _reserves = IRainbowStake(stake).getReserve();
         spend = _totalSupply.sub(_reserves);
+    }
+
+    // Cheaper than using an oracle in case gas prices become ridiculous
+    function setFee(uint _fee) public override returns (uint fee) {
+        require(msg.sender == feeTo, "UniFaucet: MUST_BE_FEE_OWNER");
+        feeAmount = _fee;
+        fee = _fee;
     }
 }

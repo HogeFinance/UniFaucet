@@ -9,7 +9,7 @@ contract RainbowFactory is IRainbowFactory {
     mapping(address => address) public override getStake;
     address[] public override allStakes;
 
-    constructor() public {}
+    constructor() {}
 
     function allStakesLength() external view override returns (uint) {
         return allStakes.length;

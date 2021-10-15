@@ -25,32 +25,6 @@ export const irainbowfactory = [
         "type": "event"
     },
     {
-        "inputs": [],
-        "name": "feeTo",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "feeToSetter",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "address",
@@ -119,31 +93,5 @@ export const irainbowfactory = [
         ],
         "stateMutability": "nonpayable",
         "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "setFeeTo",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "setFeeToSetter",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
     }
-]
+];

@@ -26,7 +26,7 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         unlocked = 1;
     }
 
-    constructor() public {
+    constructor() {
         factory = msg.sender;
     }
 
@@ -68,7 +68,7 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function burn(address to) external lock override returns (uint amount0) {
+    function burn(address to) external lock override returns (uint) {
         require(getReserve() > 0, 'UniFaucet: CANNOT_BURN_NO_LIQUIDITY');
         address _token = token0;
         uint liquidity = balanceOf[address(this)]; // Num LP Tokens
@@ -80,6 +80,7 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         uint _reserve = getReserve();
         _update(_reserve.sub(liquidity));
         emit Burn(msg.sender, liquidity, to);
+        return liquidity;
     }
 
     function drip(address to, uint amount) external override {
