@@ -17,7 +17,7 @@ import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
   // Changes based on network
-  let faucetAddr = '0xaC76c5624Acc480DD9B184a39839871f8f6591a0'
+  let faucetAddr = '0x36D4793d8bBce0Ec04e9Db7D48c4c391BC1923c3'
   const defaultToken = {
     label: '0xfad45e47083e4607302aa43c65fb3106f1cd7607 HOGE',
     value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
@@ -26,9 +26,8 @@ const Faucet: React.FC<{}> = () => {
 
   // BSC list
   var tokenlist = [
-    { label: 'TT357 0x531d44244E1E2F4a386A04276bf1726Ac42E44A9', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' },
-    { label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3' },
     { label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40', value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40' },
+    { label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3' },
     { label: '100X 0x016C285d5b918B92aa85EF1e147498BADfe30d69', value: '0x016C285d5b918B92aa85EF1e147498BADfe30d69' },
     { label: 'ELONGATE 0x2A9718defF471f3Bb91FA0ECEAB14154F150a385', value: '0x2A9718defF471f3Bb91FA0ECEAB14154F150a385' },
     { label: 'MONSTA 0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f', value: '0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f' },
@@ -36,7 +35,8 @@ const Faucet: React.FC<{}> = () => {
     { label: 'BABYDOGE 0xc748673057861a797275cd8a068abb95a902e8de', value: '0xc748673057861a797275cd8a068abb95a902e8de' },
     { label: 'FEG 0xacfc95585d80ab62f67a14c566c1b7a49fe91167', value: '0xacfc95585d80ab62f67a14c566c1b7a49fe91167' },
     { label: 'CUMMIES 0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d', value: '0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d' },
-    { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' }
+    { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' },
+    { label: 'TT357 0x531d44244E1E2F4a386A04276bf1726Ac42E44A9', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' }
   ]
 
   const chainLookup: Record<string, string> = {
