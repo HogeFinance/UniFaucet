@@ -26,17 +26,17 @@ const Faucet: React.FC<{}> = () => {
 
   // BSC list
   var tokenlist = [
-    { label: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9 TT357', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9'},
-    { label: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3 SFM', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3'},
-    { label: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40 HOGE', value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40'},
-    { label: '0x016C285d5b918B92aa85EF1e147498BADfe30d69 100X', value: '0x016C285d5b918B92aa85EF1e147498BADfe30d69'},
-    { label: '0x2A9718defF471f3Bb91FA0ECEAB14154F150a385 ELONGATE', value: '0x2A9718defF471f3Bb91FA0ECEAB14154F150a385'},
-    { label: '0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f MONSTA', value: '0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f'},
-    { label: '0x8850d2c68c632e3b258e612abaa8fada7e6958e5 PIG', value: '0x8850d2c68c632e3b258e612abaa8fada7e6958e5'},
-    { label: '0xc748673057861a797275cd8a068abb95a902e8de BABYDOGE', value: '0xc748673057861a797275cd8a068abb95a902e8de'},
-    { label: '0xacfc95585d80ab62f67a14c566c1b7a49fe91167 FEG', value: '0xacfc95585d80ab62f67a14c566c1b7a49fe91167'},
-    { label: '0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d CUMMIES', value: '0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d'},
-    { label: '0x7c63f96feafacd84e75a594c00fac3693386fbf0 ASS', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' }
+    { label: 'TT357 0x531d44244E1E2F4a386A04276bf1726Ac42E44A9', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' },
+    { label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3' },
+    { label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40', value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40' },
+    { label: '100X 0x016C285d5b918B92aa85EF1e147498BADfe30d69', value: '0x016C285d5b918B92aa85EF1e147498BADfe30d69' },
+    { label: 'ELONGATE 0x2A9718defF471f3Bb91FA0ECEAB14154F150a385', value: '0x2A9718defF471f3Bb91FA0ECEAB14154F150a385' },
+    { label: 'MONSTA 0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f', value: '0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f' },
+    { label: 'PIG 0x8850d2c68c632e3b258e612abaa8fada7e6958e5', value: '0x8850d2c68c632e3b258e612abaa8fada7e6958e5' },
+    { label: 'BABYDOGE 0xc748673057861a797275cd8a068abb95a902e8de', value: '0xc748673057861a797275cd8a068abb95a902e8de' },
+    { label: 'FEG 0xacfc95585d80ab62f67a14c566c1b7a49fe91167', value: '0xacfc95585d80ab62f67a14c566c1b7a49fe91167' },
+    { label: 'CUMMIES 0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d', value: '0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d' },
+    { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' }
   ]
 
   const chainLookup: Record<string, string> = {
@@ -113,16 +113,16 @@ const Faucet: React.FC<{}> = () => {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const updateDrip = async(token: { label: string; value: string }) => {
+  const updateDrip = async (token: { label: string; value: string }) => {
     try {
       const unifaucetInstance = await new web3.eth.Contract(
-          iunifaucet,
-          faucetAddr
+        iunifaucet,
+        faucetAddr
       )
 
       const tokenInterface = await new web3.eth.Contract(
-          standardtoken,
-          token?.value
+        standardtoken,
+        token?.value
       )
       balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
       const tokenSymbol = await tokenInterface.methods.symbol().call()
@@ -147,7 +147,7 @@ const Faucet: React.FC<{}> = () => {
     }
     //need to fix, no need to call this everytime!
     let [web3, account] = await getAccountInfo()
-    if (!token) token = {label: "", value: ""}
+    if (!token) token = { label: "", value: "" }
     updateDrip(token)
   }
 
@@ -157,7 +157,7 @@ const Faucet: React.FC<{}> = () => {
   })
 
   async function getAccountInfo() {
-    if (web3 && account) return([web3, account])
+    if (web3 && account) return ([web3, account])
     provider = await web3Modal.connect()
     web3 = await new Web3(provider)
 
@@ -167,7 +167,7 @@ const Faucet: React.FC<{}> = () => {
     }
 
     if (window.ethereum) {
-      window.ethereum.on('networkChanged', function(networkId: string){
+      window.ethereum.on('networkChanged', function (networkId: string) {
         if (networkId == "56") {
           setNetworkNameText(chainLookup[networkId])
           setBlinker('')
@@ -214,7 +214,7 @@ const Faucet: React.FC<{}> = () => {
         .drip(dripToken, account)
         .send({ from: account, value: feeAmount })
 
-      if(response.status === true) {
+      if (response.status === true) {
         updateDrip(selectedToken)
       }
     } catch (e) {
@@ -383,11 +383,18 @@ const Faucet: React.FC<{}> = () => {
           <Form>
             <Form.Group className="mb-3" controlId="formSelect">
               <CreatableSelect
-                className="formatSelect"
-                isClearable
-                onChange={handleChange}
-                value={selectedToken}
-                options={tokenlist}
+
+                styles={{
+                  control: styles => ({ ...styles, 
+                    backgroundColor: 'white',
+                  textAlign: 'left' }),
+                }
+               }
+              className="formatSelect"
+              isClearable
+              onChange={handleChange}
+              value={selectedToken}
+              options={tokenlist}
               />
             </Form.Group>
           </Form>
