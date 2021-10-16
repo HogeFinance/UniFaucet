@@ -19,8 +19,8 @@ const Faucet: React.FC<{}> = () => {
   // Changes based on network
   let faucetAddr = '0x36D4793d8bBce0Ec04e9Db7D48c4c391BC1923c3'
   const defaultToken = {
-    label: '0xfad45e47083e4607302aa43c65fb3106f1cd7607 HOGE',
-    value: '0xfad45e47083e4607302aa43c65fb3106f1cd7607',
+    label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
+    value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
   }
 
 
@@ -91,7 +91,7 @@ const Faucet: React.FC<{}> = () => {
 
   // Logic code
   const [showModal, setShow] = useState(false)
-  const [outputAmount, setOutputAmount] = useState('((10.000.000)) HOGE')
+  const [outputAmount, setOutputAmount] = useState('0.00')
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
   const [connectButtonText, setConnectButtonText] = useState('Not Connected')
   const [account, setAccountText] = useState(null)
