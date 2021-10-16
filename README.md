@@ -9,6 +9,7 @@ https://github.com/HogeFinance/UniFaucet/issues
 
 ## Using the Faucet
 ### As a Liquidity Provider
+- Click STAKE
 - Enter Token Address
 - Enter Token Amount
 - Click Approve, wait for transaction to confirm.
