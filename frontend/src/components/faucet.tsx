@@ -213,6 +213,10 @@ const Faucet: React.FC<{}> = () => {
       let response = await unifaucetInstance.methods
         .drip(dripToken, account)
         .send({ from: account, value: feeAmount })
+
+      if(response.status === true) {
+        updateDrip(selectedToken)
+      }
     } catch (e) {
       const result = (e as Error).message
       alert(result)
