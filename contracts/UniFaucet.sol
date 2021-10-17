@@ -22,23 +22,11 @@ contract UniFaucet is IUniFaucet {
         feeAmount = _feeAmount;
     }
 
-    // **** ADD LIQUIDITY ****
-    function _addLiquidity(
-        address tokenA
-    ) private {
-        // create the pair if it doesn't exist yet
-        if (IRainbowFactory(factory).getStake(tokenA) == address(0)) {
-            IRainbowFactory(factory).createStake(tokenA);
-        }
-    }
-    function addLiquidity(address tokenA, uint amountA, address to) external virtual override returns (uint liquidity) {
-        _addLiquidity(tokenA);
-        // See Optimiziation:  https://github.com/Uniswap/v2-periphery/blob/dda62473e2da448bc9cb8f4514dadda4aeede5f4/contracts/libraries/UniswapV2Library.sol#L18
+    function createLiquidityStake(address tokenA) public returns (address) {
         address stake = IRainbowFactory(factory).getStake(tokenA);
-        require(stake != address(0), "UniFaucet: STAKE DOES NOT EXIST");
-
-        TransferHelper.safeTransferFrom(tokenA, msg.sender, stake, amountA);
-        liquidity = IRainbowStake(stake).mint(to);
+        require(stake == address(0), "UniFaucet: STAKE ALREADY EXISTS");
+        stake = IRainbowFactory(factory).createStake(tokenA);
+        return stake;
     }
 
     // **** REMOVE LIQUIDITY ****

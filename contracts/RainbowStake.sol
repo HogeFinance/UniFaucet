@@ -5,6 +5,7 @@ import './RainbowERC20.sol';
 import './libraries/Math.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IRainbowFactory.sol';
+import './libraries/TransferHelper.sol';
 
 contract RainbowStake is IRainbowStake, RainbowERC20 {
     using SafeMath for uint;
@@ -52,19 +53,25 @@ contract RainbowStake is IRainbowStake, RainbowERC20 {
         emit Sync(reserve0);
     }
 
-    // this low-level function should be called from a contract which performs important safety checks
-    function mint(address to) external lock override returns (uint) {
-        // Fetch amount actually received from Router transfer()
-        uint _balance0 = IERC20(token0).balanceOf(address(this));
-        uint _reserve = getReserve();
-        uint _liquidity = _balance0.sub(_reserve);
+    function addLiquidity(address tokenA, uint amountA, address to) external override lock {
+        // See Optimiziation:  https://github.com/Uniswap/v2-periphery/blob/dda62473e2da448bc9cb8f4514dadda4aeede5f4/contracts/libraries/UniswapV2Library.sol#L18
+        uint _balanceBeforeTransfer = IERC20(token0).balanceOf(address(this));
+        TransferHelper.safeTransferFrom(tokenA, msg.sender, address(this), amountA);
+        uint _balanceAfterTransfer = IERC20(token0).balanceOf(address(this));
+
+        uint _liquidity = _balanceAfterTransfer.sub(_balanceBeforeTransfer);
         require(_liquidity > 0, 'RainbowStake: INSUFFICIENT_LIQUIDITY_MINTED');
 
+        mint(to, _liquidity);
+    }
+
+    // this low-level function should be called from a contract which performs important safety checks
+    function mint(address to, uint _liquidity) private {
+        uint _reserve = getReserve();
         _mint(to, _liquidity);
         _update(_reserve.add(_liquidity)); // Update reserve only by minted amount
 
-        emit Mint(msg.sender, _balance0);
-        return _liquidity;
+        emit Mint(msg.sender, _liquidity);
     }
 
     // this low-level function should be called from a contract which performs important safety checks
