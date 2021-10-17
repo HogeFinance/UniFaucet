@@ -12,18 +12,21 @@ contract("UniFaucet", function (accounts) {
     let token = await TestToken.deployed();
     let faucet = await UniFaucet.deployed();
     let factory = await RainbowFactory.deployed();
+
     await token.mint(accounts[0], 100);
-    await token.approve(faucet.address, 100);
-    await faucet.addLiquidity(token.address, 100, accounts[0]);
+    await faucet.createLiquidityStake(token.address);
+
+    let stake = await factory.getStake(token.address);
+    await token.approve(stake, 100);
+    let stakeContract = await RainbowStake.at(stake);
+    await stakeContract.addLiquidity(token.address, 100, accounts[0]);
 
     // No tokens left in accounts[0]
-    let stake   = await factory.getStake(token.address);
     let balance = await token.balanceOf(accounts[0]);
     let bal     = await balance.toNumber();
     assert.equal(bal, 0);
 
     // Has liquidity
-    let stakeContract = await RainbowERC20.at(stake);
     balance = await stakeContract.balanceOf(accounts[0]);
     bal     = await balance.toNumber();
     assert.equal(bal, 100);
@@ -44,13 +47,14 @@ contract("UniFaucet", function (accounts) {
     let token = await TestToken.deployed();
     let faucet = await UniFaucet.deployed();
     let factory = await RainbowFactory.deployed();
-    let stake = await factory.getStake(token.address);
-    let stakeContract = await RainbowERC20.at(stake);
 
     // Add more liquidity
     await token.mint(accounts[0], 100);
-    await token.approve(faucet.address, 100);
-    await faucet.addLiquidity(token.address, 100, accounts[0]);
+    let stake = await factory.getStake(token.address);
+    await token.approve(stake, 100);
+    let stakeContract = await RainbowStake.at(stake);
+    await stakeContract.addLiquidity(token.address, 100, accounts[0]);
+
 
     // No tokens left in accounts[0]
     let balance = await token.balanceOf(accounts[0]);
@@ -105,14 +109,15 @@ contract("UniFaucet", function (accounts) {
 
   it("add more to liquidity, have correct reserve", async function() {
     let token = await TestToken.deployed();
-    let faucet = await UniFaucet.deployed();
     let factory = await RainbowFactory.deployed();
-    let stake = await factory.getStake(token.address);
 
     // Add more liquidity
     await token.mint(accounts[0], 3);
-    await token.approve(faucet.address, 3);
-    await faucet.addLiquidity(token.address, 3, accounts[0]);
+    let stake = await factory.getStake(token.address);
+    await token.approve(stake, 3);
+    let stakeContract = await RainbowStake.at(stake);
+    await stakeContract.addLiquidity(token.address, 3, accounts[0]);
+
 
     // Has correct Reserve
     let rainbowStakeInstance = await RainbowStake.at(stake);
@@ -121,8 +126,6 @@ contract("UniFaucet", function (accounts) {
     assert.equal(bal, 103);
   });
 
-  // // 300 tokens
-  // // 200 LP
   it("should drip when reflection", async function() {
     let token = await TestToken.deployed();
     let faucet = await UniFaucet.deployed();
@@ -151,6 +154,24 @@ contract("UniFaucet", function (accounts) {
     assert.equal(bal, 103);
   });
 
+  it("should update reserve to correct amount when adding after reflection", async function() {
+    let token = await TestToken.deployed();
+    let faucet = await UniFaucet.deployed();
+    let factory = await RainbowFactory.deployed();
+
+    // Add more liquidity
+    await token.mint(accounts[0], 10);
+    let stake = await factory.getStake(token.address);
+    await token.approve(stake, 10);
+    let stakeContract = await RainbowStake.at(stake);
+    await stakeContract.addLiquidity(token.address, 10, accounts[0]);
+
+    // Have correct available balance
+    let balance = await faucet.getAvailableSpend(token.address);
+    let bal = await balance.toNumber();
+    assert.equal(bal, 99);
+  })
+
   it("should return correct liquidity on remove after reflection", async function() {
     let token = await TestToken.deployed();
     let faucet = await UniFaucet.deployed();
@@ -163,7 +184,7 @@ contract("UniFaucet", function (accounts) {
 
     let balance = await token.balanceOf(stake);
     let bal = await balance.toNumber()
-    assert.equal(bal, 192)
+    assert.equal(bal, 202)
   })
 
   it("should allow fee to be changed", async function() {

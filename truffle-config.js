@@ -44,6 +44,14 @@ module.exports = {
       skipDryRun: true
     },
 
+    bsc: {
+      provider: () => new HDWalletProvider(process.env.BSC_KEY, `https://bsc-dataseed1.binance.org`),
+      network_id: 56,
+      confirmations: 10,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
+
     develop: {
       port: 8545
     }
@@ -55,7 +63,7 @@ module.exports = {
   },
 
   api_keys: {
-    etherscan: process.env.ETHERSCAN_API
+    etherscan: process.env.ETHERSCAN_API_KEY
   },
 
   plugins: [
