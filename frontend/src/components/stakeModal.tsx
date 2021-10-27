@@ -1,7 +1,7 @@
 import { Button, Modal } from 'react-bootstrap'
 import React, {FocusEvent, useState} from 'react'
 import styled from 'styled-components'
-import {iunifaucet, standardtoken, irainbowerc20, irainbowfactory} from "../contractabi";
+import {iunifaucet, standardtoken, irainbowstake, irainbowerc20, irainbowfactory} from "../contractabi";
 
 interface Props {
   showModal: boolean
@@ -9,6 +9,8 @@ interface Props {
   getAccountInfo: () => Promise<any>
   faucetAddr: string
 }
+
+let stakeAddress = "";
 
 const InputsContainer = styled.div`
   display: grid;
@@ -55,6 +57,7 @@ const StakeModal: React.FC<Props> = ({
   const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
   const [approvalButtonAdd, setApprovalButtonAdd] = useState('Approve')
   const [approvalButtonRemove, setApprovalButtomRem] = useState('Approve')
+  const [stakeButton, setStakeButton] = useState('Create Stake');
 
   const handleTokenChange = (e: FocusEvent<HTMLInputElement>) =>
     setTokenAddress(e.target.value)
@@ -65,12 +68,32 @@ const StakeModal: React.FC<Props> = ({
   // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
   const faucetAddLiquidity = async () => {
     let [web3, account] = await getAccountInfo()
+    let stakeInstance = new web3.eth.Contract(irainbowstake, stakeAddress)
+
+    try {
+      let response = await stakeInstance.methods
+          .addLiquidity(tokenAddress, liquidityAddAmt, account)
+          .send({from: account})
+    }
+    catch(e) {
+      const result = (e as Error).message
+      alert(result)
+    }
+  }
+
+  //stake = IRainbowFactory(factory).getStake(tokenA);
+  //create stake
+  const createStake = async () => {
+    let [web3, account] = await getAccountInfo()
     let unifaucetInstance = new web3.eth.Contract(iunifaucet, faucetAddr)
 
     try {
       let response = await unifaucetInstance.methods
-          .addLiquidity(tokenAddress, liquidityAddAmt, account)
-          .send({from: account})
+          .createLiquidityStake(tokenAddress)
+      console.log(response);
+      setStakeButton('CREATED STAKE!');
+      //TODO GET ADDRESS OF STAKE and set stake variable
+      stakeAddress = "";
     }
     catch(e) {
       const result = (e as Error).message
@@ -84,8 +107,9 @@ const StakeModal: React.FC<Props> = ({
     let standardTokenInstance = new web3.eth.Contract(standardtoken, tokenAddress)
 
     try {
+      //TODO GET ADDRESS OF STAKE TOKEN TO CALL ADD LIQUIDITY
       let response = await standardTokenInstance.methods
-          .approve(faucetAddr, liquidityAddAmt)
+          .approve(stakeAddress, liquidityAddAmt)
           .send({from: account})
 
           if(response.status === true){
@@ -138,6 +162,8 @@ const StakeModal: React.FC<Props> = ({
     <Modal show={showModal} onHide={handleClose} centered>
       <Modal.Header closeButton >
         <Modal.Title>Stake/Unstake Tokens</Modal.Title>
+        <br></br>
+        Caution: Follow directions or risk losing funds!
       </Modal.Header>
       <Modal.Body>
         <InputsContainer>
@@ -168,6 +194,9 @@ const StakeModal: React.FC<Props> = ({
       </Modal.Body>
       <div>Add</div>
       <Modal.Footer>
+      <Button variant="secondary" onClick={createStake}>
+        {stakeButton}
+        </Button>
         <Button variant="secondary" onClick={approve}>
         {approvalButtonAdd}
         </Button>
