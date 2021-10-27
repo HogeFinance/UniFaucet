@@ -5,5 +5,4 @@ interface IUniFaucet {
     function removeLiquidity(address tokenA, uint liquidity, address to) external returns (uint amountA);
     function drip(address token, address to) payable external returns (uint amount);
     function getAvailableSpend(address token) view external returns (uint spend);
-    function setFee(uint _fee) external returns (uint fee);
 }

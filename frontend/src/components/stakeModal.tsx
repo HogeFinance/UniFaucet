@@ -52,7 +52,7 @@ const StakeModal: React.FC<Props> = ({
   getAccountInfo,
   faucetAddr
 }) => {
-  const factoryAddr = "0xCD6A5c3aEfe7808Cd357Cd0F83E5BeA7C4153f0C"
+  const factoryAddr = "0x7743e18A549e3fCfB9EA42863F132Fb481F28063"
   const [tokenAddress, setTokenAddress] = useState('')
   const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
   const [approvalButtonAdd, setApprovalButtonAdd] = useState('Approve')
@@ -68,9 +68,14 @@ const StakeModal: React.FC<Props> = ({
   // addLiquidity(address tokenA, uint amountADesired, address to) external returns (uint liquidity);
   const faucetAddLiquidity = async () => {
     let [web3, account] = await getAccountInfo()
-    let stakeInstance = new web3.eth.Contract(irainbowstake, stakeAddress)
+    let factoryInstance = new web3.eth.Contract(irainbowfactory, factoryAddr)
 
     try {
+      let stakeAddress = await factoryInstance.methods
+          .getStake(tokenAddress).call()
+
+      let stakeInstance = await new web3.eth.Contract(irainbowstake, stakeAddress)
+
       let response = await stakeInstance.methods
           .addLiquidity(tokenAddress, liquidityAddAmt, account)
           .send({from: account})
@@ -81,7 +86,7 @@ const StakeModal: React.FC<Props> = ({
     }
   }
 
-  //stake = IRainbowFactory(factory).getStake(tokenA);
+  // stake = IRainbowFactory(factory).getStake(tokenA);
   //create stake
   const createStake = async () => {
     let [web3, account] = await getAccountInfo()
@@ -89,13 +94,9 @@ const StakeModal: React.FC<Props> = ({
 
     try {
       let response = await unifaucetInstance.methods
-          .createLiquidityStake(tokenAddress)
+          .createLiquidityStake(tokenAddress).send({from: account})
       console.log(response);
-      setStakeButton('CREATED STAKE!');
-      //TODO GET ADDRESS OF STAKE and set stake variable
-      stakeAddress = "";
-    }
-    catch(e) {
+    } catch(e) {
       const result = (e as Error).message
       alert(result)
     }
@@ -105,18 +106,21 @@ const StakeModal: React.FC<Props> = ({
     // Add some input checks here
     let [web3, account] = await getAccountInfo()
     let standardTokenInstance = new web3.eth.Contract(standardtoken, tokenAddress)
+    let factoryInstance = new web3.eth.Contract(irainbowfactory, factoryAddr)
 
     try {
-      //TODO GET ADDRESS OF STAKE TOKEN TO CALL ADD LIQUIDITY
+      let stakeAddress = await factoryInstance.methods
+          .getStake(tokenAddress).call()
+      console.log(stakeAddress)
+
       let response = await standardTokenInstance.methods
           .approve(stakeAddress, liquidityAddAmt)
           .send({from: account})
 
-          if(response.status === true){
-            setApprovalButtonAdd('Approved!')
-          }
-    }
-    catch(e) {
+      if(response.status === true){
+        setApprovalButtonAdd('Approved!')
+      }
+    } catch(e) {
       const result = (e as Error).message
       alert(result)
     }
@@ -135,8 +139,7 @@ const StakeModal: React.FC<Props> = ({
           if(response.status === true){
             setApprovalButtomRem('Approved!')
           }
-    }
-    catch(e) {
+    } catch(e) {
       const result = (e as Error).message
       alert(result)
     }
@@ -162,8 +165,6 @@ const StakeModal: React.FC<Props> = ({
     <Modal show={showModal} onHide={handleClose} centered>
       <Modal.Header closeButton >
         <Modal.Title>Stake/Unstake Tokens</Modal.Title>
-        <br></br>
-        Caution: Follow directions or risk losing funds!
       </Modal.Header>
       <Modal.Body>
         <InputsContainer>

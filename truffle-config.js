@@ -4,7 +4,6 @@ var provider, address;
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const privKey = process.env.RINKEBY_KEY;
 const mumbaiKey = process.env.MUMBAI_KEY;
-// const PrivateKeyProvider = require("truffle-privatekey-provider");
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>

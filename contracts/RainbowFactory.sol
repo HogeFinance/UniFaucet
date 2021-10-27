@@ -3,8 +3,6 @@ pragma solidity >=0.6.0 <0.9.0;
 import './interfaces/IRainbowFactory.sol';
 import './RainbowStake.sol';
 
-// Interaction Contracts - https://github.com/Uniswap/v2-periphery/tree/master/contracts/interfaces
-// Core Contracts - https://github.com/Uniswap/v2-core/tree/master/contracts
 contract RainbowFactory is IRainbowFactory {
     mapping(address => address) public override getStake;
     address[] public override allStakes;
