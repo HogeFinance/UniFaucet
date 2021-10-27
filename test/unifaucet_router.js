@@ -186,15 +186,4 @@ contract("UniFaucet", function (accounts) {
     let bal = await balance.toNumber()
     assert.equal(bal, 202)
   })
-
-  it("should allow fee to be changed", async function() {
-    let faucet = await UniFaucet.deployed();
-    await faucet.setFee(100);
-  })
-
-  it("should reject fee change when not from feeTo", async function() {
-    let faucet = await UniFaucet.deployed();
-    let catchRevert = require("./exception.js").catchRevert;
-    await catchRevert(faucet.setFee(100, {from: accounts[1]}));
-  })
 });

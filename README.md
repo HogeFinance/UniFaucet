@@ -9,14 +9,15 @@ https://github.com/HogeFinance/UniFaucet/issues
 
 ## Using the Faucet
 ### As a Liquidity Provider
-- Click STAKE
+- Click `STAKE`
 - Enter Token Address
 - Enter Token Amount
-- Click Approve, wait for transaction to confirm.
-- Click Add/Remove Liquidity, wait for transaction to confirm.
+- Click `Create Stake` if this is the first time adding liquidity for the token. Otherwise, SKIP THIS STEP
+- Click `Approve`, wait for transaction to confirm.
+- Click `Add/Remove Liquidity`, wait for transaction to confirm.
 
 The faucet is designed to be funded through fee-on-transfer and similar reflect based ERC20 compatible tokens. Simply `STAKE >>` a token and as the address gains 
-redistributed tokens, they are made available through the  `> COLLECT <` button. LP providers can unstake their tokens at any time, taking with them their portion of the current
+redistributed tokens, they are made available through the  `COLLECT` button. LP providers can unstake their tokens at any time, taking with them their portion of the current
 current liquidity pool.
 
 ### As a User

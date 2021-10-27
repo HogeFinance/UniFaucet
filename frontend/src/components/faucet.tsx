@@ -17,7 +17,7 @@ import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
   // Changes based on network
-  let faucetAddr = '0x36D4793d8bBce0Ec04e9Db7D48c4c391BC1923c3'
+  let faucetAddr = '0x4c05c5C340958C26C667012eC98228659D65D221'
   const defaultToken = {
     label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
     value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
@@ -36,7 +36,7 @@ const Faucet: React.FC<{}> = () => {
     { label: 'FEG 0xacfc95585d80ab62f67a14c566c1b7a49fe91167', value: '0xacfc95585d80ab62f67a14c566c1b7a49fe91167' },
     { label: 'CUMMIES 0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d', value: '0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d' },
     { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' },
-    { label: 'TT357 0x531d44244E1E2F4a386A04276bf1726Ac42E44A9', value: '0x531d44244E1E2F4a386A04276bf1726Ac42E44A9' }
+    { label: 'TT357 0xCF36F1F750109C5047782b5da0200f6723037Db1', value: '0xCF36F1F750109C5047782b5da0200f6723037Db1' }
   ]
 
   const chainLookup: Record<string, string> = {
@@ -49,7 +49,7 @@ const Faucet: React.FC<{}> = () => {
     '250': 'Fantom Opera',
     '4002': 'Fantom Testnet',
     '42161': 'Arbitrum One',
-    '421611': 'Arbitrum Testnet Rinkeby',
+    '421611': 'Arbitrum Testnet Rinkeby'
   }
 
   const providerOptions = {
