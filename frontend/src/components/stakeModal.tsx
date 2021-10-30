@@ -52,7 +52,7 @@ const StakeModal: React.FC<Props> = ({
   getAccountInfo,
   faucetAddr
 }) => {
-  const factoryAddr = "0x7743e18A549e3fCfB9EA42863F132Fb481F28063"
+  const factoryAddr = "0x5974C0606000682093C532B5632f294F82B6a90D"
   const [tokenAddress, setTokenAddress] = useState('')
   const [liquidityAddAmt, setLiquidityAddAmt] = useState('')
   const [approvalButtonAdd, setApprovalButtonAdd] = useState('Approve')

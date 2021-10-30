@@ -17,7 +17,7 @@ import Header from './header'
 
 const Faucet: React.FC<{}> = () => {
   // Changes based on network
-  let faucetAddr = '0x4c05c5C340958C26C667012eC98228659D65D221'
+  let faucetAddr = '0x42f573C35dF9AF2822756E43ccccD6ba726b165C'
   const defaultToken = {
     label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
     value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',

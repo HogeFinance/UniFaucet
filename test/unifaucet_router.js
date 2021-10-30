@@ -87,13 +87,18 @@ contract("UniFaucet", function (accounts) {
     let factory = await RainbowFactory.deployed();
     let stake = await factory.getStake(token.address);
     let stakeContract = await RainbowERC20.at(stake);
+
+    let rainbowStakeInstance = await RainbowStake.at(stake);
+    let balance = await rainbowStakeInstance.getReserve();
+    let bal = await balance.toNumber();
+    assert.equal(bal, 200);
+
     await stakeContract.approve(faucet.address, 100);
     await faucet.removeLiquidity(token.address, 100, accounts[0]);
 
     // Stake reserve is correct
-    let rainbowStakeInstance = await RainbowStake.at(stake);
-    let balance = await rainbowStakeInstance.getReserve();
-    let bal = await balance.toNumber();
+    balance = await rainbowStakeInstance.getReserve();
+    bal = await balance.toNumber();
     assert.equal(bal, 100);
 
     // Tokens returned to account
