@@ -28,13 +28,8 @@ const Faucet: React.FC<{}> = () => {
   var tokenlist = [
     { label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40', value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40' },
     { label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3' },
-    { label: '100X 0x016C285d5b918B92aa85EF1e147498BADfe30d69', value: '0x016C285d5b918B92aa85EF1e147498BADfe30d69' },
-    { label: 'ELONGATE 0x2A9718defF471f3Bb91FA0ECEAB14154F150a385', value: '0x2A9718defF471f3Bb91FA0ECEAB14154F150a385' },
     { label: 'MONSTA 0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f', value: '0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f' },
-    { label: 'PIG 0x8850d2c68c632e3b258e612abaa8fada7e6958e5', value: '0x8850d2c68c632e3b258e612abaa8fada7e6958e5' },
     { label: 'BABYDOGE 0xc748673057861a797275cd8a068abb95a902e8de', value: '0xc748673057861a797275cd8a068abb95a902e8de' },
-    { label: 'FEG 0xacfc95585d80ab62f67a14c566c1b7a49fe91167', value: '0xacfc95585d80ab62f67a14c566c1b7a49fe91167' },
-    { label: 'CUMMIES 0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d', value: '0x27Ae27110350B98d564b9A3eeD31bAeBc82d878d' },
     { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' },
     { label: 'TT357 0xCF36F1F750109C5047782b5da0200f6723037Db1', value: '0xCF36F1F750109C5047782b5da0200f6723037Db1' }
   ]
@@ -363,14 +358,17 @@ const Faucet: React.FC<{}> = () => {
 
   const DecimalWarn = styled.div`
   fontFamily: Maven Pro;
-  color: #c4c4c4; 
-  fontSize: 0.75em;
+  color: #828282; 
+  font-size: 16px;
+  margin-top: 5px;
   @media only screen and (min-width: 768px) {
     
     margin-left: 250px;
     
   }
-
+  `
+  const Starred = styled.span`
+   vertical-align:sub;
   `
 
   // Render
@@ -423,7 +421,7 @@ const Faucet: React.FC<{}> = () => {
             </PrimaryButton>
           </CollectionArea>
         </FaucetBottom>
-        <DecimalWarn>UniFaucet does not respect decimals</DecimalWarn>
+        <DecimalWarn><Starred>*</Starred>UniFaucet does not respect decimals</DecimalWarn>
       </FaucetSection>
       <a
         href="https://github.com/HogeFinance/UniFaucet"
