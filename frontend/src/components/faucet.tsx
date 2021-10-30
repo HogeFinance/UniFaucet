@@ -361,6 +361,18 @@ const Faucet: React.FC<{}> = () => {
     font-size: 22px;
   `
 
+  const DecimalWarn = styled.div`
+  fontFamily: Maven Pro;
+  color: #c4c4c4; 
+  fontSize: 0.75em;
+  @media only screen and (min-width: 768px) {
+    
+    margin-left: 250px;
+    
+  }
+
+  `
+
   // Render
 
   return (
@@ -411,6 +423,7 @@ const Faucet: React.FC<{}> = () => {
             </PrimaryButton>
           </CollectionArea>
         </FaucetBottom>
+        <DecimalWarn>UniFaucet does not respect decimals</DecimalWarn>
       </FaucetSection>
       <a
         href="https://github.com/HogeFinance/UniFaucet"
