@@ -23,7 +23,7 @@ current liquidity pool.
 ### As a User
 - Select Token
 - Click Collect
-Press the `> COLLECT <` button to be awarded 1% of the current reflected liquidity pool size. Users are responsible for the gas fees of transfer and maintenance of the faucet.
+Press the `> COLLECT <` button to be awarded 1% of the current reflected liquidity pool size. Users are responsible for the gas fees of transfer plus a small fee for maintenance of the faucet.
 
 ### Decimals
 Unifaucet does not respect decimals.
