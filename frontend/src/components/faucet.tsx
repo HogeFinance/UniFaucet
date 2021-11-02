@@ -28,7 +28,6 @@ const Faucet: React.FC<{}> = () => {
   var tokenlist = [
     { label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40', value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40' },
     { label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3' },
-    { label: 'MONSTA 0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f', value: '0x8a5d7fcd4c90421d21d30fcc4435948ac3618b2f' },
     { label: 'BABYDOGE 0xc748673057861a797275cd8a068abb95a902e8de', value: '0xc748673057861a797275cd8a068abb95a902e8de' },
     { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' },
     { label: 'TT357 0xCF36F1F750109C5047782b5da0200f6723037Db1', value: '0xCF36F1F750109C5047782b5da0200f6723037Db1' }
