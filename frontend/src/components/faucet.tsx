@@ -23,14 +23,28 @@ const Faucet: React.FC<{}> = () => {
     value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
   }
 
-
   // BSC list
   var tokenlist = [
-    { label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40', value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40' },
-    { label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3', value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3' },
-    { label: 'BABYDOGE 0xc748673057861a797275cd8a068abb95a902e8de', value: '0xc748673057861a797275cd8a068abb95a902e8de' },
-    { label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0', value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0' },
-    { label: 'TT357 0xCF36F1F750109C5047782b5da0200f6723037Db1', value: '0xCF36F1F750109C5047782b5da0200f6723037Db1' }
+    {
+      label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
+      value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
+    },
+    {
+      label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3',
+      value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3',
+    },
+    {
+      label: 'BABYDOGE 0xc748673057861a797275cd8a068abb95a902e8de',
+      value: '0xc748673057861a797275cd8a068abb95a902e8de',
+    },
+    {
+      label: 'ASS 0x7c63f96feafacd84e75a594c00fac3693386fbf0',
+      value: '0x7c63f96feafacd84e75a594c00fac3693386fbf0',
+    },
+    {
+      label: 'TT357 0xCF36F1F750109C5047782b5da0200f6723037Db1',
+      value: '0xCF36F1F750109C5047782b5da0200f6723037Db1',
+    },
   ]
 
   const chainLookup: Record<string, string> = {
@@ -43,7 +57,7 @@ const Faucet: React.FC<{}> = () => {
     '250': 'Fantom Opera',
     '4002': 'Fantom Testnet',
     '42161': 'Arbitrum One',
-    '421611': 'Arbitrum Testnet Rinkeby'
+    '421611': 'Arbitrum Testnet Rinkeby',
   }
 
   const providerOptions = {
@@ -65,14 +79,14 @@ const Faucet: React.FC<{}> = () => {
       package: WalletConnectProvider,
       options: {
         rpc: {
-          1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-          3: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-          4: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-          56: "https://bsc-dataseed.binance.org/",
-          100: "https://rpc.xdaichain.com/",
-          137: "https://polygon-rpc.com/",
+          1: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+          3: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+          4: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+          56: 'https://bsc-dataseed.binance.org/',
+          100: 'https://rpc.xdaichain.com/',
+          137: 'https://polygon-rpc.com/',
           200: 'Arbitrum on xDai',
-          250: "https://rpc.ftm.tools/",
+          250: 'https://rpc.ftm.tools/',
           4002: 'Fantom Testnet',
           42161: 'Arbitrum One',
           421611: 'Arbitrum Testnet Rinkeby',
@@ -118,12 +132,16 @@ const Faucet: React.FC<{}> = () => {
         standardtoken,
         token?.value
       )
-      balance = await unifaucetInstance.methods.getAvailableSpend(token?.value).call()
+      balance = await unifaucetInstance.methods
+        .getAvailableSpend(token?.value)
+        .call()
       const tokenSymbol = await tokenInterface.methods.symbol().call()
-      setOutputAmount(Math.floor(parseFloat(balance) * 0.01) + ' ' + tokenSymbol)
+      setOutputAmount(
+        Math.floor(parseFloat(balance) * 0.01) + ' ' + tokenSymbol
+      )
     } catch (e) {
       const result = (e as Error).message
-      alert("No Liquidity or Token Address invalid.")
+      alert('No Liquidity or Token Address invalid.')
       setOutputAmount('0.00')
     }
   }
@@ -141,7 +159,7 @@ const Faucet: React.FC<{}> = () => {
     }
     //need to fix, no need to call this everytime!
     let [web3, account] = await getAccountInfo()
-    if (!token) token = { label: "", value: "" }
+    if (!token) token = { label: '', value: '' }
     updateDrip(token)
   }
 
@@ -151,7 +169,7 @@ const Faucet: React.FC<{}> = () => {
   })
 
   async function getAccountInfo() {
-    if (web3 && account) return ([web3, account])
+    if (web3 && account) return [web3, account]
     provider = await web3Modal.connect()
     web3 = await new Web3(provider)
 
@@ -162,24 +180,24 @@ const Faucet: React.FC<{}> = () => {
 
     if (window.ethereum) {
       window.ethereum.on('networkChanged', function (networkId: string) {
-        if (networkId == "56") {
+        if (networkId == '56') {
           setNetworkNameText(chainLookup[networkId])
           setBlinker('')
           updateDrip(defaultToken)
         } else {
-          setNetworkNameText("Please use Binance Smart Chain")
+          setNetworkNameText('Please use Binance Smart Chain')
         }
-      });
+      })
     }
 
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
 
-    if (provider.networkVersion == "56") {
+    if (provider.networkVersion == '56') {
       setNetworkNameText(chainLookup[provider.networkVersion])
       setBlinker('')
     } else {
-      setNetworkNameText("Please use Binance Smart Chain")
+      setNetworkNameText('Please use Binance Smart Chain')
     }
 
     return [web3, account]
@@ -219,8 +237,7 @@ const Faucet: React.FC<{}> = () => {
 
   // Component styles (These could also be imported from an external file if this one gets too bloated.)
 
-  const Wrapper = styled.div`
-  `
+  const Wrapper = styled.div``
 
   const Heading = styled.div`
     margin: 40px 0 40px;
@@ -339,7 +356,7 @@ const Faucet: React.FC<{}> = () => {
     right: 20px;
 
     bottom: 10px;
-   
+
     @media only screen and (max-width: 1024px) {
       position: relative;
       margin-top: 2em;
@@ -356,18 +373,16 @@ const Faucet: React.FC<{}> = () => {
   `
 
   const DecimalWarn = styled.div`
-  fontFamily: Maven Pro;
-  color: #828282; 
-  font-size: 16px;
-  margin-top: 5px;
-  @media only screen and (min-width: 768px) {
-    
-    margin-left: 250px;
-    
-  }
+    fontfamily: Maven Pro;
+    color: #828282;
+    font-size: 16px;
+    margin-top: 5px;
+    @media only screen and (min-width: 768px) {
+      margin-left: 250px;
+    }
   `
   const Starred = styled.span`
-   vertical-align:sub;
+    vertical-align: sub;
   `
 
   // Render
@@ -392,18 +407,34 @@ const Faucet: React.FC<{}> = () => {
           <Form>
             <Form.Group className="mb-3" controlId="formSelect">
               <CreatableSelect
-
                 styles={{
-                  control: styles => ({ ...styles, 
-                    backgroundColor: 'white',
-                  textAlign: 'left' }),
-                }
-               }
-              className="formatSelect"
-              isClearable
-              onChange={handleChange}
-              value={selectedToken}
-              options={tokenlist}
+                  option: (styles, state) => ({
+                    ...styles,
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    color: '#333333',
+                    backgroundColor: state.isSelected ? '#b7b7b7' : 'unset',
+                    fontWeight: state.isSelected ? 'bolder' : 'normal',
+                    ':hover': {
+                      backgroundColor: state.isSelected ? '#b7b7b7' : '#cfcfcf',
+                    },
+                  }),
+                  menuList: (styles) => ({
+                    ...styles,
+                    backgroundColor: '#DCE3F1',
+                    borderRadius: 4,
+                  }),
+                  control: (styles) => ({
+                    ...styles,
+                    backgroundColor: '#DCE3F1',
+                    textAlign: 'left',
+                  }),
+                }}
+                className="formatSelect"
+                isClearable
+                onChange={handleChange}
+                value={selectedToken}
+                options={tokenlist}
               />
             </Form.Group>
           </Form>
@@ -420,7 +451,9 @@ const Faucet: React.FC<{}> = () => {
             </PrimaryButton>
           </CollectionArea>
         </FaucetBottom>
-        <DecimalWarn><Starred>*</Starred>UniFaucet does not respect decimals</DecimalWarn>
+        <DecimalWarn>
+          <Starred>*</Starred>UniFaucet does not respect decimals
+        </DecimalWarn>
       </FaucetSection>
       <a
         href="https://github.com/HogeFinance/UniFaucet"
