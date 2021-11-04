@@ -99,7 +99,7 @@ const Faucet: React.FC<{}> = () => {
 
   // Logic code
   const [showModal, setShow] = useState(false)
-  const [outputAmount, setOutputAmount] = useState('0.00')
+  const [outputAmount, setOutputAmount] = useState('1.000.000.000.0000.00')
   const [connectVariantColor, setConnectVariantColor] = useState('danger')
   const [connectButtonText, setConnectButtonText] = useState('Not Connected')
   const [account, setAccountText] = useState(null)
@@ -109,9 +109,9 @@ const Faucet: React.FC<{}> = () => {
   // Set initial token to HOGE
   const [selectedToken, setSelectedToken] = useState<
     | {
-      label: string
-      value: string
-    }
+        label: string
+        value: string
+      }
     | undefined
   >(defaultToken)
 
@@ -445,7 +445,12 @@ const Faucet: React.FC<{}> = () => {
         </FaucetMain>
         <FaucetBottom>
           <CollectionArea>
-            <OutputValue value={outputAmount} readOnly />
+            <OutputValue
+              value={outputAmount}
+              readOnly
+              // Set width of Text-Box to length of value (+ 4 characters for spacing) to support really long numerals
+              style={{ width: outputAmount.length + 4 + 'ch' }}
+            />
             <PrimaryButton onClick={faucetDrip}>
               <ButtonLabel>COLLECT</ButtonLabel>
             </PrimaryButton>
