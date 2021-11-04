@@ -30,6 +30,10 @@ const Faucet: React.FC<{}> = () => {
       value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
     },
     {
+      label: 'MAINST 0x8fc1a944c149762b6b578a06c0de2abd6b7d2b89',
+      value: '0x8fc1a944c149762b6b578a06c0de2abd6b7d2b89'
+    },
+    {
       label: 'SFM 0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3',
       value: '0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3',
     },
