@@ -26,6 +26,10 @@ const Faucet: React.FC<{}> = () => {
   // BSC list
   var tokenlist = [
     {
+      label: 'FOXGIRL 0x8aae380fc7f085070c4bb05b9481f972cb460578',
+      value: '0x8aae380fc7f085070c4bb05b9481f972cb460578'
+    },
+    {
       label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
       value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
     },
