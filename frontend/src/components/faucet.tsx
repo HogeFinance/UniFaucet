@@ -15,13 +15,28 @@ import poweredBy from '../img/credit.svg'
 import StakeModal from './stakeModal'
 import Header from './header'
 
-const Faucet: React.FC<{}> = () => {
-  // Changes based on network
-  let faucetAddr = '0x42f573C35dF9AF2822756E43ccccD6ba726b165C'
-  const defaultToken = {
+function DefaultToken() {
+  let params = window.location.search
+  let url_params = new URLSearchParams(params)
+
+  let defaultToken = {
     label: 'HOGE-BSC 0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
     value: '0xa4FFfc757e8c4F24E7b209C033c123D20983Ad40',
   }
+
+  if (url_params.get("token") && url_params.get("token")!.match(/^0x[a-fA-F0-9]{40}$/)) {
+    defaultToken = {
+      label: url_params.get("token") || "",
+      value: url_params.get("token") || ""
+    }
+  }
+
+  return defaultToken
+}
+
+const Faucet: React.FC<{}> = () => {
+  // Changes based on network
+  let faucetAddr = '0x42f573C35dF9AF2822756E43ccccD6ba726b165C'
 
   // BSC list
   var tokenlist = [
@@ -120,7 +135,7 @@ const Faucet: React.FC<{}> = () => {
         value: string
       }
     | undefined
-  >(defaultToken)
+  >(DefaultToken())
 
   let provider = null
   let web3: any = null
@@ -131,7 +146,9 @@ const Faucet: React.FC<{}> = () => {
     setShow(true)
   }
 
-  const updateDrip = async (token: { label: string; value: string }) => {
+  const updateDrip = async (token: { label: string; value: string } | undefined) => {
+    if (!token) { return }
+
     try {
       const unifaucetInstance = await new web3.eth.Contract(
         iunifaucet,
@@ -193,7 +210,6 @@ const Faucet: React.FC<{}> = () => {
         if (networkId == '56') {
           setNetworkNameText(chainLookup[networkId])
           setBlinker('')
-          updateDrip(defaultToken)
         } else {
           setNetworkNameText('Please use Binance Smart Chain')
         }
@@ -206,6 +222,7 @@ const Faucet: React.FC<{}> = () => {
     if (provider.networkVersion == '56') {
       setNetworkNameText(chainLookup[provider.networkVersion])
       setBlinker('')
+      updateDrip(selectedToken)
     } else {
       setNetworkNameText('Please use Binance Smart Chain')
     }

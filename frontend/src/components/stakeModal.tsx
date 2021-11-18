@@ -78,7 +78,6 @@ const StakeModal: React.FC<Props> = ({
 
         if (str.match(/^0x[a-fA-F0-9]{40}$/)) {
             try {
-                debugger
                 let stakeAddress = await factoryInstance.methods
                     .getStake(str).call()
 
