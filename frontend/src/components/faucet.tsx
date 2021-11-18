@@ -158,13 +158,22 @@ const Faucet: React.FC<{}> = () => {
   const updateDrip = async (token: { label: string; value: string } | undefined) => {
     if (!token) { return }
 
+    let dripWeb3 = null;
+    if (!web3){
+      //default web3 for read-only endpoints
+      dripWeb3 = await new Web3('https://bsc-dataseed.binance.org/');
+    }
+    else{
+      dripWeb3 = web3;
+    }
+
     try {
-      const unifaucetInstance = await new web3.eth.Contract(
+      const unifaucetInstance = await new dripWeb3.eth.Contract(
         iunifaucet,
         faucetAddr
       )
 
-      const tokenInterface = await new web3.eth.Contract(
+      const tokenInterface = await new dripWeb3.eth.Contract(
         standardtoken,
         token?.value
       )
@@ -205,7 +214,7 @@ const Faucet: React.FC<{}> = () => {
   })
 
   async function getAccountInfo() {
-    if (web3 && account) return [web3, account]
+    if (web3 && (account !== null)) return [web3, account]
     provider = await web3Modal.connect()
     web3 = await new Web3(provider)
 
@@ -230,7 +239,7 @@ const Faucet: React.FC<{}> = () => {
     setConnectVariantColor('success')
 
     console.log(provider)
-    if (provider) {
+    if (provider.chainId !== null) {
       if (provider.chainId == '56') {
         setNetworkNameText(chainLookup[provider.networkVersion])
         setBlinker('')
@@ -426,6 +435,7 @@ const Faucet: React.FC<{}> = () => {
   `
 
   // Render
+  updateDrip(selectedToken);
 
   return (
     <Wrapper>
