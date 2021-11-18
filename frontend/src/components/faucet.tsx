@@ -238,9 +238,8 @@ const Faucet: React.FC<{}> = () => {
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
 
-    console.log(provider)
-    if (provider.chainId !== null) {
-      if (provider.chainId == '56') {
+    if (provider) {
+      if (provider.networkVersion == '56') {
         setNetworkNameText(chainLookup[provider.networkVersion])
         setBlinker('')
         updateDrip(selectedToken)
