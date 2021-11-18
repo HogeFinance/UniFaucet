@@ -113,6 +113,15 @@ const Faucet: React.FC<{}> = () => {
           42161: 'Arbitrum One',
           421611: 'Arbitrum Testnet Rinkeby',
         },
+        chainId: 56,
+        network: 'binance',
+        qrcode: true,
+        qrcodeModalOptions: {
+          mobileLinks: [
+            "metamask",
+            "trust",
+          ]
+        }
       },
     },
   }
@@ -131,9 +140,9 @@ const Faucet: React.FC<{}> = () => {
   // Set initial token to HOGE
   const [selectedToken, setSelectedToken] = useState<
     | {
-        label: string
-        value: string
-      }
+      label: string
+      value: string
+    }
     | undefined
   >(DefaultToken())
 
@@ -210,6 +219,7 @@ const Faucet: React.FC<{}> = () => {
         if (networkId == '56') {
           setNetworkNameText(chainLookup[networkId])
           setBlinker('')
+          updateDrip(selectedToken)
         } else {
           setNetworkNameText('Please use Binance Smart Chain')
         }
@@ -219,12 +229,15 @@ const Faucet: React.FC<{}> = () => {
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
 
-    if (provider.networkVersion == '56') {
-      setNetworkNameText(chainLookup[provider.networkVersion])
-      setBlinker('')
-      updateDrip(selectedToken)
-    } else {
-      setNetworkNameText('Please use Binance Smart Chain')
+    console.log(provider)
+    if (provider) {
+      if (provider.chainId == '56') {
+        setNetworkNameText(chainLookup[provider.networkVersion])
+        setBlinker('')
+        updateDrip(selectedToken)
+      } else {
+        setNetworkNameText('Please use Binance Smart Chain')
+      }
     }
 
     return [web3, account]
