@@ -113,15 +113,6 @@ const Faucet: React.FC<{}> = () => {
           42161: 'Arbitrum One',
           421611: 'Arbitrum Testnet Rinkeby',
         },
-        chainId: 56,
-        network: 'binance',
-        qrcode: true,
-        qrcodeModalOptions: {
-          mobileLinks: [
-            "metamask",
-            "trust",
-          ]
-        }
       },
     },
   }
@@ -140,9 +131,9 @@ const Faucet: React.FC<{}> = () => {
   // Set initial token to HOGE
   const [selectedToken, setSelectedToken] = useState<
     | {
-      label: string
-      value: string
-    }
+        label: string
+        value: string
+      }
     | undefined
   >(DefaultToken())
 
@@ -158,22 +149,13 @@ const Faucet: React.FC<{}> = () => {
   const updateDrip = async (token: { label: string; value: string } | undefined) => {
     if (!token) { return }
 
-    let dripWeb3 = null;
-    if (!web3){
-      //default web3 for read-only endpoints
-      dripWeb3 = await new Web3('https://bsc-dataseed.binance.org/');
-    }
-    else{
-      dripWeb3 = web3;
-    }
-
     try {
-      const unifaucetInstance = await new dripWeb3.eth.Contract(
+      const unifaucetInstance = await new web3.eth.Contract(
         iunifaucet,
         faucetAddr
       )
 
-      const tokenInterface = await new dripWeb3.eth.Contract(
+      const tokenInterface = await new web3.eth.Contract(
         standardtoken,
         token?.value
       )
@@ -214,7 +196,7 @@ const Faucet: React.FC<{}> = () => {
   })
 
   async function getAccountInfo() {
-    if (web3 && (account !== null)) return [web3, account]
+    if (web3 && account) return [web3, account]
     provider = await web3Modal.connect()
     web3 = await new Web3(provider)
 
@@ -228,7 +210,6 @@ const Faucet: React.FC<{}> = () => {
         if (networkId == '56') {
           setNetworkNameText(chainLookup[networkId])
           setBlinker('')
-          updateDrip(selectedToken)
         } else {
           setNetworkNameText('Please use Binance Smart Chain')
         }
@@ -238,14 +219,12 @@ const Faucet: React.FC<{}> = () => {
     setConnectButtonText('Wallet Connected')
     setConnectVariantColor('success')
 
-    if (provider) {
-      if (provider.networkVersion == '56') {
-        setNetworkNameText(chainLookup[provider.networkVersion])
-        setBlinker('')
-        updateDrip(selectedToken)
-      } else {
-        setNetworkNameText('Please use Binance Smart Chain')
-      }
+    if (provider.networkVersion == '56') {
+      setNetworkNameText(chainLookup[provider.networkVersion])
+      setBlinker('')
+      updateDrip(selectedToken)
+    } else {
+      setNetworkNameText('Please use Binance Smart Chain')
     }
 
     return [web3, account]
@@ -434,7 +413,6 @@ const Faucet: React.FC<{}> = () => {
   `
 
   // Render
-  updateDrip(selectedToken);
 
   return (
     <Wrapper>
