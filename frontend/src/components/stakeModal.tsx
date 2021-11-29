@@ -80,12 +80,14 @@ const StakeModal: React.FC<Props> = ({
             try {
                 let stakeAddress = await factoryInstance.methods
                     .getStake(str).call()
-
-                if (stakeAddress) {
+                console.log("Address: " + stakeAddress)
+                if (stakeAddress != "0x0000000000000000000000000000000000000000") {
                     setAAD('')
                     setAD('')
                     setARD('')
                     setRD('')
+                } else {
+                    setSD('')
                 }
             } catch (error) {
                 console.log(error)

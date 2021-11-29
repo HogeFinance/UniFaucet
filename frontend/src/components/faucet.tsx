@@ -222,11 +222,11 @@ const Faucet: React.FC<{}> = () => {
     if (provider.networkVersion == '56') {
       setNetworkNameText(chainLookup[provider.networkVersion])
       setBlinker('')
-      updateDrip(selectedToken)
     } else {
       setNetworkNameText('Please use Binance Smart Chain')
     }
 
+    updateDrip(selectedToken)
     return [web3, account]
   }
 
