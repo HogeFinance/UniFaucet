@@ -146,6 +146,10 @@ const Faucet: React.FC<{}> = () => {
     setShow(true)
   }
 
+  const calculateDrip = (balance: string, decimals: string) => {
+    return (parseFloat(balance) / 10**(parseInt(decimals)) * 0.01)
+  }
+
   const updateDrip = async (token: { label: string; value: string } | undefined) => {
     if (!token) { return }
 
@@ -163,8 +167,10 @@ const Faucet: React.FC<{}> = () => {
         .getAvailableSpend(token?.value)
         .call()
       const tokenSymbol = await tokenInterface.methods.symbol().call()
+      const tokenDecimals = await tokenInterface.methods.decimals().call()
+
       setOutputAmount(
-        Math.floor(parseFloat(balance) * 0.01) + ' ' + tokenSymbol
+        Number(calculateDrip(balance, tokenDecimals).toPrecision(10)) + ' ' + tokenSymbol
       )
     } catch (e) {
       const result = (e as Error).message
@@ -184,7 +190,8 @@ const Faucet: React.FC<{}> = () => {
       // Set selected token to new selection from dropdown
       setSelectedToken(token)
     }
-    //need to fix, no need to call this everytime!
+
+    console.log("I changed")
     let [web3, account] = await getAccountInfo()
     if (!token) token = { label: '', value: '' }
     updateDrip(token)
@@ -197,6 +204,7 @@ const Faucet: React.FC<{}> = () => {
 
   async function getAccountInfo() {
     if (web3 && account) return [web3, account]
+    console.log("Getting Account Again")
     provider = await web3Modal.connect()
     web3 = await new Web3(provider)
 
@@ -398,16 +406,7 @@ const Faucet: React.FC<{}> = () => {
     margin-top: 30px;
     font-size: 22px;
   `
-
-  const DecimalWarn = styled.div`
-    fontfamily: Maven Pro;
-    color: #828282;
-    font-size: 16px;
-    margin-top: 5px;
-    @media only screen and (min-width: 768px) {
-      margin-left: 250px;
-    }
-  `
+  
   const Starred = styled.span`
     vertical-align: sub;
   `
@@ -483,9 +482,6 @@ const Faucet: React.FC<{}> = () => {
             </PrimaryButton>
           </CollectionArea>
         </FaucetBottom>
-        <DecimalWarn>
-          <Starred>*</Starred>UniFaucet does not respect decimals
-        </DecimalWarn>
       </FaucetSection>
       <a
         href="https://github.com/HogeFinance/UniFaucet"
