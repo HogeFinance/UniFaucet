@@ -1,14 +1,13 @@
 import Web3 from 'web3'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import styled from 'styled-components'
 import CreatableSelect from 'react-select/creatable'
 import { ActionMeta } from 'react-select'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { standardtoken, iunifaucet } from '../contractabi'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Form } from 'react-bootstrap'
 
 import faucetlogo from '../img/faucet.png'

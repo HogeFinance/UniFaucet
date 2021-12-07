@@ -1,6 +1,5 @@
 import { Button, Modal } from 'react-bootstrap'
 import React, { FocusEvent, useState } from 'react'
-import styled from 'styled-components'
 import { ToastContainer, toast } from 'react-toastify'
 import {
   iunifaucet,
