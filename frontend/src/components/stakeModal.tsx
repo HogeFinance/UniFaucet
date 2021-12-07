@@ -9,6 +9,14 @@ import {
   irainbowerc20,
   irainbowfactory,
 } from '../contractabi'
+import {
+  InputsContainer,
+  Labels,
+  Label,
+  LabelAmount,
+  Inputs,
+  InputWrapper,
+} from './styledComponents'
 
 interface Props {
   showModal: boolean
@@ -16,40 +24,6 @@ interface Props {
   getAccountInfo: () => Promise<any>
   faucetAddr: string
 }
-
-const InputsContainer = styled.div`
-  display: grid;
-  grid-template-columns: 0.5fr 1fr;
-  grid-template-rows: auto;
-  gap: 25px 0;
-  font-family: 'Maven Pro', sans-serif;
-`
-const Labels = styled.div`
-  font-family: 'Maven Pro', sans-serif;
-`
-const Label = styled.div`
-  font-family: 'Maven Pro', sans-serif;
-  display: flex;
-  align-items: right;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  height: 30px;
-`
-const LabelAmount = styled.div`
-  font-family: 'Maven Pro', sans-serif;
-  display: flex;
-  align-items: right;
-  margin-bottom: 5px;
-  margin-top: 15px;
-  height: 30px;
-`
-const Inputs = styled.div``
-const InputWrapper = styled.div`
-  margin-bottom: 5px;
-  input {
-    width: 100%;
-  }
-`
 
 const StakeModal: React.FC<Props> = ({
   showModal,

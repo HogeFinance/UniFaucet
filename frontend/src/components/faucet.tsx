@@ -16,6 +16,23 @@ import stakeButton from '../img/stake_btn.svg'
 import poweredBy from '../img/credit.svg'
 import StakeModal from './stakeModal'
 import Header from './header'
+import {
+  Wrapper,
+  Heading,
+  Title,
+  SubTitle,
+  FaucetSection,
+  FaucetTop,
+  FaucetMain,
+  StakeButton,
+  FaucetVisual,
+  FaucetBottom,
+  CollectionArea,
+  OutputValue,
+  PrimaryButton,
+  ButtonLabel,
+  PoweredBy,
+} from './styledComponents'
 
 function DefaultToken() {
   let params = window.location.search
@@ -279,147 +296,6 @@ const Faucet: React.FC<{}> = () => {
       reportError(e)
     }
   }
-
-  // Component styles (These could also be imported from an external file if this one gets too bloated.)
-
-  const Wrapper = styled.div``
-
-  const Heading = styled.div`
-    margin: 40px 0 40px;
-  `
-
-  const Title = styled.h1`
-    margin: 0 0 16px;
-    color: #fff;
-    font-family: 'Maven Pro', sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 36px;
-    line-height: 42px;
-  `
-
-  const SubTitle = styled.span`
-    font-family: Maven Pro;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 21px;
-    color: #828282;
-  `
-
-  const FaucetSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  `
-
-  const FaucetTop = styled.div`
-    max-width: 600px;
-    width: 100%;
-    .form-group {
-      margin: 0 !important;
-    }
-  `
-  const FaucetMain = styled.div`
-    margin-right: 115px;
-    @media only screen and (max-width: 768px) {
-      margin-right: 10px;
-    }
-  `
-  const StakeButton = styled.img`
-    margin-bottom: 160px;
-    cursor: pointer;
-    @media only screen and (max-width: 768px) {
-      margin-bottom: 23%;
-    }
-  `
-  const FaucetVisual = styled.img`
-    @media only screen and (max-width: 768px) {
-      width: 50%;
-    }
-  `
-  const FaucetBottom = styled.div``
-  const CollectionArea = styled.div`
-    display: flex;
-    border: 1px solid #c4c4c4;
-    box-sizing: border-box;
-    border-radius: 4px;
-    height: 40px;
-    width: min-content;
-    margin-left: 250px;
-    @media only screen and (max-width: 768px) {
-      margin-left: 0px;
-    }
-  `
-  const OutputValue = styled.input`
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    background-color: #222628;
-    border: none;
-    text-align: center;
-    color: #c4c4c4;
-    font-family: 'Pixeboy', sans-serif;
-    font-size: 24px;
-    line-height: 24px;
-    min-width: 180px;
-    width: 0%;
-  `
-  const PrimaryButton = styled.div`
-    background: #c4c4c4;
-    border-radius: 4px;
-    padding: 0 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    &:hover {
-      background: linear-gradient(
-        90deg,
-        #833ab4 0%,
-        #fd1d1d 48.44%,
-        #fcb045 100%
-      );
-
-      span {
-        color: #fff;
-      }
-    }
-  `
-  const ButtonLabel = styled.span`
-    font-family: 'Pixeboy', sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 24px;
-    color: #222628;
-  `
-
-  const PoweredBy = styled.img`
-    position: absolute;
-
-    right: 20px;
-
-    bottom: 10px;
-
-    @media only screen and (max-width: 1024px) {
-      position: relative;
-      margin-top: 2em;
-      float: right;
-    }
-  `
-
-  const WarnMessage = styled.span`
-    color: #ff9000;
-    font-family: 'Pixeboy', sans-serif;
-    display: block;
-    margin-top: 30px;
-    font-size: 22px;
-  `
-
-  const Starred = styled.span`
-    vertical-align: sub;
-  `
 
   // Render
 
